@@ -14,6 +14,20 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             overflow: hidden;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="50" cy="50" r="30" fill="rgba(255,255,255,0.05)"/><circle cx="150" cy="150" r="25" fill="rgba(255,255,255,0.05)"/><circle cx="100" cy="100" r="20" fill="rgba(255,255,255,0.03)"/></svg>');
+            background-size: 400px 400px;
+            opacity: 0.3;
+            pointer-events: none;
         }
         .presentation {
             width: 100vw;
@@ -33,6 +47,24 @@
             display: none;
             flex-direction: column;
             position: relative;
+            overflow: hidden;
+        }
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><g opacity="0.03"><path d="M200,100 L180,120 L180,180 L200,200 L220,180 L220,120 Z" fill="%23667eea"/><circle cx="200" cy="150" r="40" fill="none" stroke="%23764ba2" stroke-width="2"/><path d="M150,200 Q200,220 250,200" fill="none" stroke="%23667eea" stroke-width="3"/><rect x="170" y="100" width="10" height="60" rx="5" fill="%23764ba2"/><rect x="220" y="100" width="10" height="60" rx="5" fill="%23764ba2"/></g></svg>');
+            background-size: 300px 300px;
+            background-repeat: no-repeat;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .slide > * {
+            position: relative;
+            z-index: 1;
         }
         .slide.active {
             display: flex;
@@ -43,6 +75,17 @@
             padding: 20px 30px;
             border-radius: 8px;
             margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        .slide-header::before {
+            content: '💊';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2em;
+            opacity: 0.3;
         }
         h1 {
             font-size: 2.5em;
@@ -137,10 +180,17 @@
     <div class="presentation">
         <!-- Slide 1: Title -->
         <div class="slide active">
-            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center;">
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center; position: relative;">
+                <div style="position: absolute; top: 10%; left: 10%; font-size: 4em; opacity: 0.1;">💊</div>
+                <div style="position: absolute; top: 15%; right: 15%; font-size: 3em; opacity: 0.1;">⚕️</div>
+                <div style="position: absolute; bottom: 20%; left: 15%; font-size: 3.5em; opacity: 0.1;">🧬</div>
+                <div style="position: absolute; bottom: 15%; right: 10%; font-size: 3em; opacity: 0.1;">💉</div>
+                <div style="position: absolute; top: 50%; left: 5%; font-size: 2.5em; opacity: 0.1;">🔬</div>
+                <div style="position: absolute; top: 40%; right: 8%; font-size: 2.5em; opacity: 0.1;">🩺</div>
+                
                 <h1 style="font-size: 3.5em; color: #667eea; margin-bottom: 20px;">General Pharmacology</h1>
                 <p style="font-size: 1.5em; color: #666; margin-bottom: 40px;">A Comprehensive Introduction</p>
-                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px 50px; border-radius: 10px;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px 50px; border-radius: 10px; box-shadow: 0 10px 30px rgba(102,126,234,0.3);">
                     <p style="font-size: 1.8em; margin-bottom: 10px;">Dr. Salu Agarwal</p>
                     <p style="font-size: 1.2em; opacity: 0.9;">BMLT | AHS 3 Credit | AHS 2 Credit</p>
                 </div>
@@ -150,13 +200,18 @@
         <!-- Slide 2: BMLT - Definition -->
         <div class="slide">
             <div class="slide-header">
-                <h2 style="color: white; margin: 0;">For BMLT Students</h2>
+                <h2 style="color: white; margin: 0;">For BMLT Students 📚</h2>
             </div>
             <div class="content">
-                <h3>Definition of Pharmacology</h3>
-                <p><span class="highlight">Pharmacology</span> is the science that deals with the study of drugs and their interactions with living systems, including their effects, mechanisms of action, therapeutic uses, and adverse effects.</p>
+                <div style="display: flex; align-items: flex-start; gap: 20px;">
+                    <div style="font-size: 4em; opacity: 0.2;">🔬</div>
+                    <div style="flex: 1;">
+                        <h3>Definition of Pharmacology</h3>
+                        <p><span class="highlight">Pharmacology</span> is the science that deals with the study of drugs and their interactions with living systems, including their effects, mechanisms of action, therapeutic uses, and adverse effects.</p>
+                    </div>
+                </div>
                 
-                <h3 style="margin-top: 30px;">Key Aspects</h3>
+                <h3 style="margin-top: 30px;">Key Aspects 🎯</h3>
                 <ul>
                     <li>Study of drug composition and properties</li>
                     <li>Effects of drugs on biological systems</li>
@@ -170,18 +225,18 @@
         <!-- Slide 3: BMLT - Branches -->
         <div class="slide">
             <div class="slide-header">
-                <h2 style="color: white; margin: 0;">Branches of Pharmacology</h2>
+                <h2 style="color: white; margin: 0;">Branches of Pharmacology 🌿</h2>
             </div>
             <div class="content">
                 <ul style="font-size: 1.05em;">
-                    <li><strong>Pharmacokinetics:</strong> Study of drug absorption, distribution, metabolism, and excretion</li>
-                    <li><strong>Pharmacodynamics:</strong> Study of drug mechanisms and effects on the body</li>
-                    <li><strong>Pharmacotherapeutics:</strong> Use of drugs in treatment of diseases</li>
-                    <li><strong>Toxicology:</strong> Study of harmful effects of substances</li>
-                    <li><strong>Clinical Pharmacology:</strong> Application of pharmacology in clinical settings</li>
-                    <li><strong>Pharmacy:</strong> Preparation and dispensing of drugs</li>
-                    <li><strong>Pharmacognosy:</strong> Study of drugs from natural sources</li>
-                    <li><strong>Posology:</strong> Study of drug dosages</li>
+                    <li>🧪 <strong>Pharmacokinetics:</strong> Study of drug absorption, distribution, metabolism, and excretion</li>
+                    <li>⚙️ <strong>Pharmacodynamics:</strong> Study of drug mechanisms and effects on the body</li>
+                    <li>💊 <strong>Pharmacotherapeutics:</strong> Use of drugs in treatment of diseases</li>
+                    <li>☠️ <strong>Toxicology:</strong> Study of harmful effects of substances</li>
+                    <li>🏥 <strong>Clinical Pharmacology:</strong> Application of pharmacology in clinical settings</li>
+                    <li>🔬 <strong>Pharmacy:</strong> Preparation and dispensing of drugs</li>
+                    <li>🌱 <strong>Pharmacognosy:</strong> Study of drugs from natural sources</li>
+                    <li>📏 <strong>Posology:</strong> Study of drug dosages</li>
                 </ul>
             </div>
             <div class="slide-number">Slide 3</div>
@@ -226,7 +281,7 @@
         <!-- Slide 6: Drug Definition -->
         <div class="slide">
             <div class="slide-header">
-                <h2 style="color: white; margin: 0;">What is a Drug?</h2>
+                <h2 style="color: white; margin: 0;">What is a Drug? 💊</h2>
             </div>
             <div class="content">
                 <h3>Definition</h3>
@@ -236,18 +291,18 @@
                 <div class="two-column">
                     <div>
                         <ul>
-                            <li>Aspirin (analgesic)</li>
-                            <li>Insulin (antidiabetic)</li>
-                            <li>Penicillin (antibiotic)</li>
-                            <li>Morphine (analgesic)</li>
+                            <li>💊 Aspirin (analgesic)</li>
+                            <li>💉 Insulin (antidiabetic)</li>
+                            <li>🦠 Penicillin (antibiotic)</li>
+                            <li>💊 Morphine (analgesic)</li>
                         </ul>
                     </div>
                     <div>
                         <ul>
-                            <li>Digoxin (cardiac glycoside)</li>
-                            <li>Paracetamol (antipyretic)</li>
-                            <li>Atenolol (antihypertensive)</li>
-                            <li>Omeprazole (antiulcer)</li>
+                            <li>❤️ Digoxin (cardiac glycoside)</li>
+                            <li>🌡️ Paracetamol (antipyretic)</li>
+                            <li>💓 Atenolol (antihypertensive)</li>
+                            <li>🔥 Omeprazole (antiulcer)</li>
                         </ul>
                     </div>
                 </div>
@@ -258,25 +313,25 @@
         <!-- Slide 7: Sources of Drugs -->
         <div class="slide">
             <div class="slide-header">
-                <h2 style="color: white; margin: 0;">Sources of Drugs</h2>
+                <h2 style="color: white; margin: 0;">Sources of Drugs 🌍</h2>
             </div>
             <div class="content">
-                <h3>1. Plant Sources</h3>
+                <h3>🌿 1. Plant Sources</h3>
                 <p>Examples: Morphine (Papaver somniferum), Digoxin (Digitalis purpurea), Atropine (Atropa belladonna)</p>
                 
-                <h3>2. Animal Sources</h3>
+                <h3>🐄 2. Animal Sources</h3>
                 <p>Examples: Insulin (pancreas), Heparin (intestinal mucosa), Thyroid hormones</p>
                 
-                <h3>3. Mineral Sources</h3>
+                <h3>⛰️ 3. Mineral Sources</h3>
                 <p>Examples: Iron, Calcium, Magnesium sulfate, Potassium permanganate</p>
                 
-                <h3>4. Microbial Sources</h3>
+                <h3>🦠 4. Microbial Sources</h3>
                 <p>Examples: Penicillin (Penicillium), Streptomycin (Streptomyces)</p>
                 
-                <h3>5. Synthetic Sources</h3>
+                <h3>⚗️ 5. Synthetic Sources</h3>
                 <p>Examples: Aspirin, Paracetamol, Sulfonamides</p>
                 
-                <h3>6. Biotechnology</h3>
+                <h3>🧬 6. Biotechnology</h3>
                 <p>Examples: Recombinant insulin, Monoclonal antibodies, Vaccines</p>
             </div>
             <div class="slide-number">Slide 7</div>
@@ -373,26 +428,26 @@
         <!-- Slide 11: Prescription - Parts -->
         <div class="slide">
             <div class="slide-header">
-                <h2 style="color: white; margin: 0;">Parts of a Prescription</h2>
+                <h2 style="color: white; margin: 0;">Parts of a Prescription 📋</h2>
             </div>
             <div class="content" style="font-size: 0.95em;">
                 <div class="prescription-part">
-                    <strong>1. Superscription (℞):</strong> Symbol meaning "take thou" or "recipe"
+                    <strong>1. Superscription (℞):</strong> Symbol meaning "take thou" or "recipe" 💊
                 </div>
                 <div class="prescription-part">
-                    <strong>2. Inscription:</strong> Name and quantity of drug(s) prescribed
+                    <strong>2. Inscription:</strong> Name and quantity of drug(s) prescribed 📝
                 </div>
                 <div class="prescription-part">
-                    <strong>3. Subscription:</strong> Directions to the pharmacist for dispensing
+                    <strong>3. Subscription:</strong> Directions to the pharmacist for dispensing 🔬
                 </div>
                 <div class="prescription-part">
-                    <strong>4. Signatura (Sig.):</strong> Directions to the patient for taking the medicine
+                    <strong>4. Signatura (Sig.):</strong> Directions to the patient for taking the medicine 👨‍⚕️
                 </div>
                 <div class="prescription-part">
-                    <strong>5. Prescriber's Details:</strong> Name, qualification, registration number, signature, date
+                    <strong>5. Prescriber's Details:</strong> Name, qualification, registration number, signature, date ✍️
                 </div>
                 <div class="prescription-part">
-                    <strong>6. Patient's Details:</strong> Name, age, sex, address
+                    <strong>6. Patient's Details:</strong> Name, age, sex, address 👤
                 </div>
             </div>
             <div class="slide-number">Slide 11</div>
@@ -438,6 +493,7 @@
         <div class="slide">
             <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center;">
                 <h1 style="font-size: 3.5em; color: #667eea; margin-bottom: 30px;">Thank You</h1>
+                <p style="font-size: 1.5em; color: #666; margin-bottom: 20px;">Questions & Discussion</p>
                 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px 40px; border-radius: 10px;">
                     <p style="font-size: 1.3em;">Dr. Salu Agarwal</p>
                 </div>
