@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>General Pharmacology</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slide {
+            width: 90%;
+            max-width: 1000px;
+            height: 85vh;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 50px 60px;
+            display: none;
+            flex-direction: column;
+            position: relative;
+        }
+        .slide.active {
+            display: flex;
+        }
+        .slide-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        h2 {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 25px;
+        }
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .content {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .content h3 {
+            color: #764ba2;
+            margin: 20px 0 10px 0;
+            font-size: 1.4em;
+        }
+        .content p, .content li {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .content ul {
+            margin-left: 30px;
+        }
+        .highlight {
+            background: #ffeaa7;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .example {
+            background: #f0f0f0;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .slide-number {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #999;
+            font-size: 0.9em;
+        }
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .prescription-part {
+            background: #e8f4f8;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border-left: 3px solid #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center;">
+                <h1 style="font-size: 3.5em; color: #667eea; margin-bottom: 20px;">General Pharmacology</h1>
+                <p style="font-size: 1.5em; color: #666; margin-bottom: 40px;">A Comprehensive Introduction</p>
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px 50px; border-radius: 10px;">
+                    <p style="font-size: 1.8em; margin-bottom: 10px;">Dr. Salu Agarwal</p>
+                    <p style="font-size: 1.2em; opacity: 0.9;">BMLT | AHS 3 Credit | AHS 2 Credit</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: BMLT - Definition -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 style="color: white; margin: 0;">For BMLT Students</h2>
+            </div>
+            <div class="content">
+                <h3>Definition of Pharmacology</h3>
+                <p><span class="highlight">Pharmacology</span> is the science that deals with the study of drugs and their interactions with living systems, including their effects, mechanisms of action, therapeutic uses, and adverse effects.</p>
+                
+                <h3 style="margin-top: 30px;">Key Aspects</h3>
+                <ul>
+                    <li>Study of drug composition and properties</li>
+                    <li>Effects of drugs on biological systems</li>
+                    <li>Therapeutic applications</li>
+                    <li>Drug interactions and adverse effects</li>
+                </ul>
+            </div>
+            <div class="slide-number">Slide 2</div>
+        </div>
+
+        <!-- Slide 3: BMLT - Branches -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 style="color: white; margin: 0;">Branches of Pharmacology</h2>
+            </div>
+            <div class="content">
+                <ul style="font-size: 1.05em;">
+                    <li><strong>Pharmacokinetics:</strong> Study of drug absorption, distribution, metabolism, and excretion</li>
+                    <li><strong>Pharmacodynamics:</strong> Study of drug mechanisms and effects on the body</li>
+                    <li><strong>Pharmacotherapeutics:</strong> Use of drugs in treatment of diseases</li>
+                    <li><strong>Toxicology:</strong> Study of harmful effects of substances</li>
+                    <li><strong>Clinical Pharmacology:</strong> Application of pharmacology in clinical settings</li>
+                    <li><strong>Pharmacy:</strong> Preparation and dispensing of drugs</li>
+                    <li><strong>Pharmacognosy:</strong> Study of drugs from natural sources</li>
+                    <li><strong>Posology:</strong> Study of drug dosages</li>
+                </ul>
+            </div>
+            <div class="slide-number">Slide 3</div>
+        </div>
+
+        <!-- Slide 4: AHS - Definitions Part 1 -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 style="color: white; margin: 0;">Key Definitions (Part 1)</h2>
+            </div>
+            <div class="content">
+                <h3>Pharmacology</h3>
+                <p>The science of drugs including their origin, composition, properties, effects, and therapeutic uses.</p>
+                
+                <h3>Pharmacokinetics</h3>
+                <p>What the body does to the drug - study of ADME (Absorption, Distribution, Metabolism, Excretion).</p>
+                
+                <h3>Pharmacodynamics</h3>
+                <p>What the drug does to the body - study of drug action, mechanisms, and effects.</p>
+            </div>
+            <div class="slide-number">Slide 4</div>
+        </div>
+
+        <!-- Slide 5: AHS - Definitions Part 2 -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 style="color: white; margin: 0;">Key Definitions (Part 2)</h2>
+            </div>
+            <div class="content">
+                <h3>Pharmacotherapeutics</h3>
+                <p>The branch dealing with the use of drugs in the prevention and treatment of diseases.</p>
+                
+                <h3>Clinical Pharmacology</h3>
+                <p>The study of drugs in humans, focusing on safe and effective therapeutic use in patients.</p>
+                
+                <h3>Toxicology</h3>
+                <p>The study of poisons and adverse effects of drugs, including detection, effects, and treatment of poisoning.</p>
+            </div>
+            <div class="slide-number">Slide 5</div>
+        </div>
+
+        <!-- Slide 6: Drug Definition -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 style="color: white; margin: 0;">What is a Drug?</h2>
+            </div>
+            <div class="content">
+                <h3>Definition</h3>
+                <p>A drug is any substance that, when administered to a living organism, produces a biological response and is used for diagnosis, prevention, treatment, or cure of disease.</p>
+                
+                <h3>Examples of Drugs</h3>
+                <div class="two-column">
+                    <div>
+                        <ul>
+                            <li>Aspirin (analgesic)</li>
+                            <li>Insulin (antidiabetic)</li>
+                            <li>Penicillin (antibiotic)</li>
+                            <li>Morphine (analgesic)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul>
+                            <li>Digoxin (cardiac glycoside)</li>
+                            <li>Paracetamol (antipyretic)</li>
+                            <li>Atenolol (antihypertensive)</li>
+                            <li>Omeprazole (antiulcer)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">Slide 6</div>
+        </div>
+
+        <!-- Slide 7: Sources of Drugs -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 style="color: white; margin: 0;">Sources of Drugs</h2>
+            </div>
+            <div class="content">
+                <h3>1. Plant Sources</h3>
+                <p>Examples: Morphine (Papaver somniferum), Digoxin (Digitalis purpurea), Atropine (Atropa belladonna)</p>
+                
+                <h3>2. Animal Sources</h3>
+                <p>Examples: Insulin (pancreas), Heparin (intestinal mucosa), Thyroid hormones</p>
+                
+                <h3>3. Mineral Sources</h3>
+                <p>Examples: Iron, Calcium, Magnesium sulfate, Potassium permanganate</p>
+                
+                <h3>4. Microbial Sources</h3>
+                <p>Examples: Penicillin (Penicillium), Streptomycin (Streptomyces)</p>
+                
+                <h3>5. Synthetic Sources</h3>
+                <p>Examples: Aspirin, Paracetamol, Sulfonamides</p>
+                
+                <h3>6. Biotechnology</h3>
+                <p>Examples: Recombinant insulin, Monoclonal antibodies, Vaccines</p>
+            </div>
+            <div class="slide-number">Slide 7</div>
+        </div>
+
+        <!-- Slide 8: Drug Nomenclature -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 style="color: white; margin: 0;">Drug Nomenclature</h2>
+            </div>
+            <div class="content">
+                <h3>1. Chemical Name</h3>
+                <p>Scientific name based on chemical structure</p>
+                <div class="example">
+                    <strong>Example:</strong> N-(4-hydroxyphenyl)acetamide
+                </div>
+                
+                <h3>2. Non-proprietary / Generic Name</h3>
+                <p>Official name assigned by regulatory authorities (WHO, USAN)</p>
+                <div class="example">
+                    <strong>Example:</strong> Paracetamol / Acetaminophen
+                </div>
+                
+                <h3>3. Proprietary / Brand Name</h3>
+                <p>Trademark name given by the pharmaceutical company</p>
+                <div class="example">
+                    <strong>Example:</strong> Crocin, Tylenol, Calpol
+                </div>
+            </div>
+            <div class="slide-number">Slide 8</div>
+        </div>
+
+        <!-- Slide 9: Drug Nomenclature Examples -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 style="color: white; margin: 0;">Drug Nomenclature Examples</h2>
+            </div>
+            <div class="content" style="font-size: 1em;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr style="background: #667eea; color: white;">
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Chemical Name</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Generic Name</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Brand Names</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">2-acetoxybenzoic acid</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">Aspirin</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">Disprin, Ecosprin</td>
+                    </tr>
+                    <tr style="background: #f9f9f9;">
+                        <td style="padding: 12px; border: 1px solid #ddd;">7-chloro-1,3-dihydro-1-methyl-5-phenyl-2H-1,4-benzodiazepin-2-one</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">Diazepam</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">Valium, Calmpose</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">α-[2-(dimethylamino)ethyl]benzyl alcohol</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">Diphenhydramine</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">Benadryl</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="slide-number">Slide 9</div>
+        </div>
+
+        <!-- Slide 10: Sources of Drug Information -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 style="color: white; margin: 0;">Sources of Drug Information</h2>
+            </div>
+            <div class="content">
+                <h3>Primary Sources</h3>
+                <ul>
+                    <li>Original research articles in peer-reviewed journals</li>
+                    <li>Clinical trial reports</li>
+                </ul>
+                
+                <h3>Secondary Sources</h3>
+                <ul>
+                    <li><strong>Pharmacopoeias:</strong> IP (Indian), BP (British), USP (United States)</li>
+                    <li><strong>Textbooks:</strong> Goodman & Gilman, Rang & Dale</li>
+                    <li><strong>Drug formularies:</strong> National Formulary, BNF</li>
+                </ul>
+                
+                <h3>Tertiary Sources</h3>
+                <ul>
+                    <li>Drug information databases (PubMed, Medline)</li>
+                    <li>Package inserts and drug labels</li>
+                    <li>Online resources (WHO, FDA websites)</li>
+                </ul>
+            </div>
+            <div class="slide-number">Slide 10</div>
+        </div>
+
+        <!-- Slide 11: Prescription - Parts -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 style="color: white; margin: 0;">Parts of a Prescription</h2>
+            </div>
+            <div class="content" style="font-size: 0.95em;">
+                <div class="prescription-part">
+                    <strong>1. Superscription (℞):</strong> Symbol meaning "take thou" or "recipe"
+                </div>
+                <div class="prescription-part">
+                    <strong>2. Inscription:</strong> Name and quantity of drug(s) prescribed
+                </div>
+                <div class="prescription-part">
+                    <strong>3. Subscription:</strong> Directions to the pharmacist for dispensing
+                </div>
+                <div class="prescription-part">
+                    <strong>4. Signatura (Sig.):</strong> Directions to the patient for taking the medicine
+                </div>
+                <div class="prescription-part">
+                    <strong>5. Prescriber's Details:</strong> Name, qualification, registration number, signature, date
+                </div>
+                <div class="prescription-part">
+                    <strong>6. Patient's Details:</strong> Name, age, sex, address
+                </div>
+            </div>
+            <div class="slide-number">Slide 11</div>
+        </div>
+
+        <!-- Slide 12: Prescription Abbreviations -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 style="color: white; margin: 0;">Standard Prescription Abbreviations</h2>
+            </div>
+            <div class="content">
+                <div class="two-column" style="font-size: 0.95em;">
+                    <div>
+                        <ul>
+                            <li><strong>OD/od:</strong> Once daily</li>
+                            <li><strong>BD/bid:</strong> Twice daily</li>
+                            <li><strong>TDS/tid:</strong> Three times daily</li>
+                            <li><strong>QID:</strong> Four times daily</li>
+                            <li><strong>AC:</strong> Before meals</li>
+                            <li><strong>PC:</strong> After meals</li>
+                            <li><strong>HS:</strong> At bedtime</li>
+                            <li><strong>PRN:</strong> As needed</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul>
+                            <li><strong>PO:</strong> By mouth</li>
+                            <li><strong>IM:</strong> Intramuscular</li>
+                            <li><strong>IV:</strong> Intravenous</li>
+                            <li><strong>SC:</strong> Subcutaneous</li>
+                            <li><strong>Tab:</strong> Tablet</li>
+                            <li><strong>Cap:</strong> Capsule</li>
+                            <li><strong>Syr:</strong> Syrup</li>
+                            <li><strong>Inj:</strong> Injection</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">Slide 12</div>
+        </div>
+
+        <!-- Slide 13: Thank You -->
+        <div class="slide">
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center;">
+                <h1 style="font-size: 3.5em; color: #667eea; margin-bottom: 30px;">Thank You</h1>
+                <p style="font-size: 1.5em; color: #666; margin-bottom: 20px;">Questions & Discussion</p>
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px 40px; border-radius: 10px;">
+                    <p style="font-size: 1.3em;">Dr. Salu Agarwal</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        showSlide(0);
+    </script>
+</body>
+</html>
