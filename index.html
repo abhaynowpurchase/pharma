@@ -3,541 +3,680 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>General Pharmacology</title>
+    <title>Tech Process Flow & Responsibilities</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            overflow: hidden;
-            position: relative;
+            min-height: 100vh;
+            padding: 20px;
         }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="50" cy="50" r="30" fill="rgba(255,255,255,0.05)"/><circle cx="150" cy="150" r="25" fill="rgba(255,255,255,0.05)"/><circle cx="100" cy="100" r="20" fill="rgba(255,255,255,0.03)"/></svg>');
-            background-size: 400px 400px;
-            opacity: 0.3;
-            pointer-events: none;
-        }
-        .presentation {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .slide {
-            width: 90%;
-            max-width: 1000px;
-            height: 85vh;
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
             background: white;
-            border-radius: 10px;
+            border-radius: 16px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            padding: 50px 60px;
-            display: none;
-            flex-direction: column;
-            position: relative;
             overflow: hidden;
         }
-        .slide::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 100%;
-            height: 100%;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><g opacity="0.03"><path d="M200,100 L180,120 L180,180 L200,200 L220,180 L220,120 Z" fill="%23667eea"/><circle cx="200" cy="150" r="40" fill="none" stroke="%23764ba2" stroke-width="2"/><path d="M150,200 Q200,220 250,200" fill="none" stroke="%23667eea" stroke-width="3"/><rect x="170" y="100" width="10" height="60" rx="5" fill="%23764ba2"/><rect x="220" y="100" width="10" height="60" rx="5" fill="%23764ba2"/></g></svg>');
-            background-size: 300px 300px;
-            background-repeat: no-repeat;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .slide > * {
-            position: relative;
-            z-index: 1;
-        }
-        .slide.active {
-            display: flex;
-        }
-        .slide-header {
+
+        .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 20px 30px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
+            padding: 30px;
+            text-align: center;
         }
-        .slide-header::before {
-            content: '💊';
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 2em;
-            opacity: 0.3;
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
         }
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        h2 {
-            font-size: 2em;
-            color: #667eea;
-            margin-bottom: 25px;
-        }
-        .subtitle {
-            font-size: 1.2em;
+
+        .header p {
             opacity: 0.9;
+            font-size: 14px;
         }
-        .content {
-            flex: 1;
-            overflow-y: auto;
-        }
-        .content h3 {
-            color: #764ba2;
-            margin: 20px 0 10px 0;
-            font-size: 1.4em;
-        }
-        .content p, .content li {
-            font-size: 1.1em;
-            line-height: 1.8;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .content ul {
-            margin-left: 30px;
-        }
-        .highlight {
-            background: #ffeaa7;
-            padding: 2px 6px;
-            border-radius: 3px;
-        }
-        .example {
-            background: #f0f0f0;
-            padding: 15px;
-            border-left: 4px solid #667eea;
-            margin: 15px 0;
-            border-radius: 5px;
-        }
-        .controls {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
+
+        .tabs {
             display: flex;
-            gap: 15px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            overflow-x: auto;
         }
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
+
+        .tab {
+            padding: 16px 24px;
             cursor: pointer;
-            font-size: 1em;
-            transition: transform 0.2s;
+            border: none;
+            background: none;
+            font-size: 15px;
+            font-weight: 500;
+            color: #6c757d;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            white-space: nowrap;
         }
-        button:hover {
-            transform: scale(1.05);
+
+        .tab:hover {
+            background: #e9ecef;
+            color: #495057;
         }
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
         }
-        .slide-number {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #999;
-            font-size: 0.9em;
+
+        .content {
+            padding: 30px;
+            min-height: 400px;
         }
-        .two-column {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s;
         }
-        .prescription-part {
-            background: #e8f4f8;
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        h3 {
+            color: #495057;
+            margin: 20px 0 12px 0;
+            font-size: 18px;
+        }
+
+        .org-chart {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
             padding: 12px;
-            margin: 8px 0;
-            border-radius: 5px;
-            border-left: 3px solid #667eea;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .role-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .role-card h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+
+        .section {
+            margin: 15px 0;
+        }
+
+        .section-title {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        li {
+            margin: 6px 0;
+            line-height: 1.6;
+        }
+
+        .decision-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 2px;
+        }
+
+        .decision-yes {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .decision-no {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .flow-step {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+
+        .flow-step h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .key-principle {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .impact-flow {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .impact-flow div {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+            display: inline-block;
+            min-width: 250px;
+        }
+
+        .arrow {
+            font-size: 24px;
+            color: #667eea;
+            margin: 5px 0;
         }
     </style>
 </head>
 <body>
-    <div class="presentation">
-        <!-- Slide 1: Title -->
-        <div class="slide active">
-            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center; position: relative;">
-                <div style="position: absolute; top: 10%; left: 10%; font-size: 4em; opacity: 0.1;">💊</div>
-                <div style="position: absolute; top: 15%; right: 15%; font-size: 3em; opacity: 0.1;">⚕️</div>
-                <div style="position: absolute; bottom: 20%; left: 15%; font-size: 3.5em; opacity: 0.1;">🧬</div>
-                <div style="position: absolute; bottom: 15%; right: 10%; font-size: 3em; opacity: 0.1;">💉</div>
-                <div style="position: absolute; top: 50%; left: 5%; font-size: 2.5em; opacity: 0.1;">🔬</div>
-                <div style="position: absolute; top: 40%; right: 8%; font-size: 2.5em; opacity: 0.1;">🩺</div>
+    <div class="container">
+        <div class="header">
+            <h1>🧩 Tech Process Flow, Roles & Responsibilities</h1>
+            <p>Clear Decision Rights | Non-Overlapping Ownership | Defined Approval Authority</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('structure')">Company Structure</button>
+            <button class="tab" onclick="showTab('decisions')">Decision Matrix</button>
+            <button class="tab" onclick="showTab('roles')">Roles & Responsibilities</button>
+            <button class="tab" onclick="showTab('process')">Process Flow</button>
+            <button class="tab" onclick="showTab('performance')">Performance & Fixes</button>
+        </div>
+
+        <div class="content">
+            <div id="structure" class="tab-content active">
+                <h2>1️⃣ Company Tech Structure</h2>
                 
-                <h1 style="font-size: 3.5em; color: #667eea; margin-bottom: 20px;">General Pharmacology</h1>
-                <p style="font-size: 1.5em; color: #666; margin-bottom: 40px;">A Comprehensive Introduction</p>
-                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px 50px; border-radius: 10px; box-shadow: 0 10px 30px rgba(102,126,234,0.3);">
-                    <p style="font-size: 1.8em; margin-bottom: 10px;">Dr. Salu Agarwal</p>
-                    <p style="font-size: 1.2em; opacity: 0.9;">BMLT | AHS 3 Credit | AHS 2 Credit</p>
+                <div class="org-chart">CTO
+ ├── Senior Engineering Manager (SEM)
+ │    ├── Frontend Architect
+ │    │    └── Frontend Developers
+ │    └── Backend Developers (4)
+ └── Design Team
+
+Product Team (Independent)</div>
+
+                <div class="key-principle">
+                    <strong>Key Principle:</strong> Each role has clear decision rights, non-overlapping ownership, and defined approval authority.
                 </div>
             </div>
-        </div>
 
-        <!-- Slide 2: BMLT - Definition -->
-        <div class="slide">
-          
-            <div class="content">
-                <div style="display: flex; align-items: flex-start; gap: 20px;">
-                    <div style="font-size: 4em; opacity: 0.2;">🔬</div>
-                    <div style="flex: 1;">
-                        <h3>Definition of Pharmacology</h3>
-                        <p><span class="highlight">Pharmacology</span> is the science that deals with the study of drugs and their interactions with living systems, including their effects, mechanisms of action, therapeutic uses, and adverse effects.</p>
-                    </div>
-                </div>
+            <div id="decisions" class="tab-content">
+                <h2>2️⃣ Decision Ownership Matrix</h2>
                 
-                <h3 style="margin-top: 30px;">Key Aspects 🎯</h3>
-                <ul>
-                    <li>Study of drug composition and properties</li>
-                    <li>Effects of drugs on biological systems</li>
-                    <li>Therapeutic applications</li>
-                    <li>Drug interactions and adverse effects</li>
-                </ul>
-            </div>
-            <div class="slide-number">Slide 2</div>
-        </div>
-
-        <!-- Slide 3: BMLT - Branches -->
-        <div class="slide">
-            <div class="slide-header">
-                <h2 style="color: white; margin: 0;">Branches of Pharmacology 🌿</h2>
-            </div>
-            <div class="content">
-                <ul style="font-size: 1.05em;">
-                    <li>🧪 <strong>Pharmacokinetics:</strong> Study of drug absorption, distribution, metabolism, and excretion</li>
-                    <li>⚙️ <strong>Pharmacodynamics:</strong> Study of drug mechanisms and effects on the body</li>
-                    <li>💊 <strong>Pharmacotherapeutics:</strong> Use of drugs in treatment of diseases</li>
-                    <li>☠️ <strong>Toxicology:</strong> Study of harmful effects of substances</li>
-                    <li>🏥 <strong>Clinical Pharmacology:</strong> Application of pharmacology in clinical settings</li>
-                    <li>🔬 <strong>Pharmacy:</strong> Preparation and dispensing of drugs</li>
-                    <li>🌱 <strong>Pharmacognosy:</strong> Study of drugs from natural sources</li>
-                    <li>📏 <strong>Posology:</strong> Study of drug dosages</li>
-                </ul>
-            </div>
-            <div class="slide-number">Slide 3</div>
-        </div>
-
-        <!-- Slide 4: AHS - Definitions Part 1 -->
-        <div class="slide">
-            <div class="slide-header">
-                <h2 style="color: white; margin: 0;">Key Definitions (Part 1)</h2>
-            </div>
-            <div class="content">
-                <h3>Pharmacology</h3>
-                <p>The science of drugs including their origin, composition, properties, effects, and therapeutic uses.</p>
-                
-                <h3>Pharmacokinetics</h3>
-                <p>What the body does to the drug - study of ADME (Absorption, Distribution, Metabolism, Excretion).</p>
-                
-                <h3>Pharmacodynamics</h3>
-                <p>What the drug does to the body - study of drug action, mechanisms, and effects.</p>
-            </div>
-            <div class="slide-number">Slide 4</div>
-        </div>
-
-        <!-- Slide 5: AHS - Definitions Part 2 -->
-        <div class="slide">
-            <div class="slide-header">
-                <h2 style="color: white; margin: 0;">Key Definitions (Part 2)</h2>
-            </div>
-            <div class="content">
-                <h3>Pharmacotherapeutics</h3>
-                <p>The branch dealing with the use of drugs in the prevention and treatment of diseases.</p>
-                
-                <h3>Clinical Pharmacology</h3>
-                <p>The study of drugs in humans, focusing on safe and effective therapeutic use in patients.</p>
-                
-                <h3>Toxicology</h3>
-                <p>The study of poisons and adverse effects of drugs, including detection, effects, and treatment of poisoning.</p>
-            </div>
-            <div class="slide-number">Slide 5</div>
-        </div>
-
-        <!-- Slide 6: Drug Definition -->
-        <div class="slide">
-            <div class="slide-header">
-                <h2 style="color: white; margin: 0;">What is a Drug? 💊</h2>
-            </div>
-            <div class="content">
-                <h3>Definition</h3>
-                <p>A drug is any substance that, when administered to a living organism, produces a biological response and is used for diagnosis, prevention, treatment, or cure of disease.</p>
-                
-                <h3>Examples of Drugs</h3>
-                <div class="two-column">
-                    <div>
-                        <ul>
-                            <li>💊 Aspirin (analgesic)</li>
-                            <li>💉 Insulin (antidiabetic)</li>
-                            <li>🦠 Penicillin (antibiotic)</li>
-                            <li>💊 Morphine (analgesic)</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <ul>
-                            <li>❤️ Digoxin (cardiac glycoside)</li>
-                            <li>🌡️ Paracetamol (antipyretic)</li>
-                            <li>💓 Atenolol (antihypertensive)</li>
-                            <li>🔥 Omeprazole (antiulcer)</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="slide-number">Slide 6</div>
-        </div>
-
-        <!-- Slide 7: Sources of Drugs -->
-        <div class="slide">
-            <div class="slide-header">
-                <h2 style="color: white; margin: 0;">Sources of Drugs 🌍</h2>
-            </div>
-            <div class="content">
-                <h3>🌿 1. Plant Sources</h3>
-                <p>Examples: Morphine (Papaver somniferum), Digoxin (Digitalis purpurea), Atropine (Atropa belladonna)</p>
-                
-                <h3>🐄 2. Animal Sources</h3>
-                <p>Examples: Insulin (pancreas), Heparin (intestinal mucosa), Thyroid hormones</p>
-                
-                <h3>⛰️ 3. Mineral Sources</h3>
-                <p>Examples: Iron, Calcium, Magnesium sulfate, Potassium permanganate</p>
-                
-                <h3>🦠 4. Microbial Sources</h3>
-                <p>Examples: Penicillin (Penicillium), Streptomycin (Streptomyces)</p>
-                
-                <h3>⚗️ 5. Synthetic Sources</h3>
-                <p>Examples: Aspirin, Paracetamol, Sulfonamides</p>
-                
-                <h3>🧬 6. Biotechnology</h3>
-                <p>Examples: Recombinant insulin, Monoclonal antibodies, Vaccines</p>
-            </div>
-            <div class="slide-number">Slide 7</div>
-        </div>
-
-        <!-- Slide 8: Drug Nomenclature -->
-        <div class="slide">
-            <div class="slide-header">
-                <h2 style="color: white; margin: 0;">Drug Nomenclature</h2>
-            </div>
-            <div class="content">
-                <h3>1. Chemical Name</h3>
-                <p>Scientific name based on chemical structure</p>
-                <div class="example">
-                    <strong>Example:</strong> N-(4-hydroxyphenyl)acetamide
-                </div>
-                
-                <h3>2. Non-proprietary / Generic Name</h3>
-                <p>Official name assigned by regulatory authorities (WHO, USAN)</p>
-                <div class="example">
-                    <strong>Example:</strong> Paracetamol / Acetaminophen
-                </div>
-                
-                <h3>3. Proprietary / Brand Name</h3>
-                <p>Trademark name given by the pharmaceutical company</p>
-                <div class="example">
-                    <strong>Example:</strong> Crocin, Tylenol, Calpol
-                </div>
-            </div>
-            <div class="slide-number">Slide 8</div>
-        </div>
-
-        <!-- Slide 9: Drug Nomenclature Examples -->
-        <div class="slide">
-            <div class="slide-header">
-                <h2 style="color: white; margin: 0;">Drug Nomenclature Examples</h2>
-            </div>
-            <div class="content" style="font-size: 1em;">
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr style="background: #667eea; color: white;">
-                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Chemical Name</th>
-                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Generic Name</th>
-                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Brand Names</th>
-                    </tr>
-                    <tr>
-                        <td style="padding: 12px; border: 1px solid #ddd;">2-acetoxybenzoic acid</td>
-                        <td style="padding: 12px; border: 1px solid #ddd;">Aspirin</td>
-                        <td style="padding: 12px; border: 1px solid #ddd;">Disprin, Ecosprin</td>
-                    </tr>
-                    <tr style="background: #f9f9f9;">
-                        <td style="padding: 12px; border: 1px solid #ddd;">7-chloro-1,3-dihydro-1-methyl-5-phenyl-2H-1,4-benzodiazepin-2-one</td>
-                        <td style="padding: 12px; border: 1px solid #ddd;">Diazepam</td>
-                        <td style="padding: 12px; border: 1px solid #ddd;">Valium, Calmpose</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 12px; border: 1px solid #ddd;">α-[2-(dimethylamino)ethyl]benzyl alcohol</td>
-                        <td style="padding: 12px; border: 1px solid #ddd;">Diphenhydramine</td>
-                        <td style="padding: 12px; border: 1px solid #ddd;">Benadryl</td>
-                    </tr>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Area</th>
+                            <th>Decision Owner</th>
+                            <th>Approval Required From</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Product vision & feature scope</td>
+                            <td>Product Team</td>
+                            <td>CTO (high impact only)</td>
+                        </tr>
+                        <tr>
+                            <td>UX flow & design</td>
+                            <td>Design Team</td>
+                            <td>Product Team</td>
+                        </tr>
+                        <tr>
+                            <td>Architecture & technical flow</td>
+                            <td>Frontend Architect</td>
+                            <td>SEM</td>
+                        </tr>
+                        <tr>
+                            <td>Sprint planning & delivery timeline</td>
+                            <td>SEM + Frontend Architect</td>
+                            <td>Product Team</td>
+                        </tr>
+                        <tr>
+                            <td>Ticket impact & feasibility</td>
+                            <td>Dev → Architect</td>
+                            <td>SEM</td>
+                        </tr>
+                        <tr>
+                            <td>Performance & accountability</td>
+                            <td>SEM</td>
+                            <td>CTO</td>
+                        </tr>
+                        <tr>
+                            <td>Final go-live approval</td>
+                            <td>SEM</td>
+                            <td>Product Team</td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
-            <div class="slide-number">Slide 9</div>
-        </div>
 
-        <!-- Slide 10: Sources of Drug Information -->
-        <div class="slide">
-            <div class="slide-header">
-                <h2 style="color: white; margin: 0;">Sources of Drug Information</h2>
-            </div>
-            <div class="content">
-                <h3>Primary Sources</h3>
-                <ul>
-                    <li>Original research articles in peer-reviewed journals</li>
-                    <li>Clinical trial reports</li>
-                </ul>
-                
-                <h3>Secondary Sources</h3>
-                <ul>
-                    <li><strong>Pharmacopoeias:</strong> IP (Indian), BP (British), USP (United States)</li>
-                    <li><strong>Textbooks:</strong> Goodman & Gilman, Rang & Dale</li>
-                    <li><strong>Drug formularies:</strong> National Formulary, BNF</li>
-                </ul>
-                
-                <h3>Tertiary Sources</h3>
-                <ul>
-                    <li>Drug information databases (PubMed, Medline)</li>
-                    <li>Package inserts and drug labels</li>
-                    <li>Online resources (WHO, FDA websites)</li>
-                </ul>
-            </div>
-            <div class="slide-number">Slide 10</div>
-        </div>
+            <div id="roles" class="tab-content">
+                <h2>3️⃣ Roles & Responsibilities</h2>
 
-        <!-- Slide 11: Prescription - Parts -->
-        <div class="slide">
-            <div class="slide-header">
-                <h2 style="color: white; margin: 0;">Parts of a Prescription 📋</h2>
-            </div>
-            <div style="width:100%;display:flex;">
-            <div class="content" style="font-size: 0.95em;width:65%;">
-                <div class="prescription-part">
-                    <strong>1. Superscription (℞):</strong> Symbol meaning "take thou" or "recipe" 💊
-                </div>
-                <div class="prescription-part">
-                    <strong>2. Inscription:</strong> Name and quantity of drug(s) prescribed 📝
-                </div>
-                <div class="prescription-part">
-                    <strong>3. Subscription:</strong> Directions to the pharmacist for dispensing 🔬
-                </div>
-                <div class="prescription-part">
-                    <strong>4. Signatura (Sig.):</strong> Directions to the patient for taking the medicine 👨‍⚕️
-                </div>
-                <div class="prescription-part">
-                    <strong>5. Prescriber's Details:</strong> Name, qualification, registration number, signature, date ✍️
-                </div>
-                <div class="prescription-part">
-                    <strong>6. Patient's Details:</strong> Name, age, sex, address 👤
-                </div>
-            </div>
-               <div class="content" style="font-size: 0.95em;width:30%;">
-          <img
-  src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1KMXuE-68OjXfxPP58CwcfBjnTVGQy_tfp6RmbaQOken2dFf_JbNeepQpeH1-HIpELt0Fy2hWQybCJaHqPGaR1BRaMnBWQFwv13Smr0Zq-k886vyYyZr5O9ggC_LACCyasowtansbBQE/s1600/prescription.png"
-  alt="Image"
-  width="362"
-  height="450"
-/>
-            </div>
-            </div>
-            <div class="slide-number">Slide 11</div>
-        </div>
-
-        <!-- Slide 12: Prescription Abbreviations -->
-        <div class="slide">
-            <div class="slide-header">
-                <h2 style="color: white; margin: 0;">Standard Prescription Abbreviations</h2>
-            </div>
-            <div class="content">
-                <div class="two-column" style="font-size: 0.95em;">
-                    <div>
+                <div class="role-card">
+                    <h3>🔹 CTO (Chief Technology Officer)</h3>
+                    <div class="section">
+                        <div class="section-title">Ownership</div>
                         <ul>
-                            <li><strong>OD/od:</strong> Once daily</li>
-                            <li><strong>BD/bid:</strong> Twice daily</li>
-                            <li><strong>TDS/tid:</strong> Three times daily</li>
-                            <li><strong>QID:</strong> Four times daily</li>
-                            <li><strong>AC:</strong> Before meals</li>
-                            <li><strong>PC:</strong> After meals</li>
-                            <li><strong>HS:</strong> At bedtime</li>
-                            <li><strong>PRN:</strong> As needed</li>
+                            <li>Overall technology strategy</li>
+                            <li>People, process, and architecture governance</li>
+                            <li>Owns Senior Engineering Manager and Design Team</li>
                         </ul>
                     </div>
-                    <div>
+                    <div class="section">
+                        <div class="section-title">Responsibilities</div>
                         <ul>
-                            <li><strong>PO:</strong> By mouth</li>
-                            <li><strong>IM:</strong> Intramuscular</li>
-                            <li><strong>IV:</strong> Intravenous</li>
-                            <li><strong>SC:</strong> Subcutaneous</li>
-                            <li><strong>Tab:</strong> Tablet</li>
-                            <li><strong>Cap:</strong> Capsule</li>
-                            <li><strong>Syr:</strong> Syrup</li>
-                            <li><strong>Inj:</strong> Injection</li>
+                            <li>Define long-term tech vision and standards</li>
+                            <li>Resolve cross-team conflicts</li>
+                            <li>Final escalation authority</li>
+                            <li>Performance governance framework</li>
+                            <li>Approve major architectural changes</li>
+                            <li>Ensure delivery predictability</li>
                         </ul>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Decision Power</div>
+                        <span class="decision-badge decision-yes">✅ Hire/fire</span>
+                        <span class="decision-badge decision-yes">✅ Performance impact approval</span>
+                        <span class="decision-badge decision-yes">✅ Tech stack decisions</span>
+                        <span class="decision-badge decision-yes">✅ Architecture veto power</span>
+                    </div>
+                </div>
+
+                <div class="role-card">
+                    <h3>🔹 Senior Engineering Manager (SEM)</h3>
+                    <div class="section">
+                        <div class="section-title">Ownership</div>
+                        <ul>
+                            <li>Delivery, execution, and performance</li>
+                            <li>Sprint commitments and timelines</li>
+                            <li>Owns Frontend Architect & Backend Devs</li>
+                        </ul>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Responsibilities</div>
+                        <ul>
+                            <li>Convert product scope into delivery plans</li>
+                            <li>Sprint planning & capacity management</li>
+                            <li>Approve timelines & sprint breakdown</li>
+                            <li>Track sprint health</li>
+                            <li>Handle spillovers & performance impact</li>
+                            <li>Ensure dev adherence to process</li>
+                        </ul>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Decision Power</div>
+                        <span class="decision-badge decision-yes">✅ Sprint planning</span>
+                        <span class="decision-badge decision-yes">✅ Task spillover decision</span>
+                        <span class="decision-badge decision-yes">✅ Performance score impact</span>
+                        <span class="decision-badge decision-yes">✅ Dev allocation</span>
+                    </div>
+                </div>
+
+                <div class="role-card">
+                    <h3>🔹 Frontend Architect</h3>
+                    <div class="section">
+                        <div class="section-title">Ownership</div>
+                        <ul>
+                            <li>System architecture</li>
+                            <li>Frontend + integration flow</li>
+                            <li>Code quality & scalability</li>
+                        </ul>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Responsibilities</div>
+                        <ul>
+                            <li>Define technical architecture</li>
+                            <li>Review ticket impact analysis</li>
+                            <li>Approve frontend + API contracts</li>
+                            <li>Ensure architecture alignment</li>
+                            <li>Guide frontend developers</li>
+                            <li>Prevent tech debt</li>
+                        </ul>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Decision Power</div>
+                        <span class="decision-badge decision-yes">✅ Architecture approval</span>
+                        <span class="decision-badge decision-yes">✅ Impact analysis approval</span>
+                        <span class="decision-badge decision-yes">✅ Frontend standards</span>
+                    </div>
+                </div>
+
+                <div class="role-card">
+                    <h3>🔹 Backend Developers</h3>
+                    <div class="section">
+                        <div class="section-title">Ownership</div>
+                        <ul>
+                            <li>Backend APIs, services, data models</li>
+                        </ul>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Responsibilities</div>
+                        <ul>
+                            <li>Perform ticket impact analysis</li>
+                            <li>Build APIs as per approved design</li>
+                            <li>Write unit tests</li>
+                            <li>Deploy backend services</li>
+                            <li>Fix reported bugs</li>
+                            <li>Meet sprint commitments</li>
+                        </ul>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Decision Power</div>
+                        <span class="decision-badge decision-no">❌ No architectural decisions</span>
+                        <span class="decision-badge decision-no">❌ No scope change authority</span>
+                    </div>
+                </div>
+
+                <div class="role-card">
+                    <h3>🔹 Frontend Developers</h3>
+                    <div class="section">
+                        <div class="section-title">Ownership</div>
+                        <ul>
+                            <li>UI implementation & integration</li>
+                        </ul>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Responsibilities</div>
+                        <ul>
+                            <li>Perform ticket impact analysis</li>
+                            <li>Build UI as per design</li>
+                            <li>Integrate APIs</li>
+                            <li>Unit + basic integration testing</li>
+                            <li>Fix bugs reported by product team</li>
+                            <li>Meet sprint commitments</li>
+                        </ul>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Decision Power</div>
+                        <span class="decision-badge decision-no">❌ No design changes</span>
+                        <span class="decision-badge decision-no">❌ No architecture changes</span>
+                    </div>
+                </div>
+
+                <div class="role-card">
+                    <h3>🔹 Design Team</h3>
+                    <div class="section">
+                        <div class="section-title">Ownership</div>
+                        <ul>
+                            <li>UX/UI & user flows</li>
+                        </ul>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Responsibilities</div>
+                        <ul>
+                            <li>Create product flow designs</li>
+                            <li>Provide design specs & assets</li>
+                            <li>Clarify UI/UX doubts</li>
+                            <li>Maintain design consistency</li>
+                        </ul>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Decision Power</div>
+                        <span class="decision-badge decision-yes">✅ UI/UX design authority</span>
+                        <span class="decision-badge decision-no">❌ No feature scope control</span>
+                    </div>
+                </div>
+
+                <div class="role-card">
+                    <h3>🔹 Product Team</h3>
+                    <div class="section">
+                        <div class="section-title">Ownership</div>
+                        <ul>
+                            <li>What to build & why</li>
+                            <li>Feature prioritization</li>
+                        </ul>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Responsibilities</div>
+                        <ul>
+                            <li>Finalize product flow</li>
+                            <li>Define feature scope</li>
+                            <li>Get designs done</li>
+                            <li>Groom features to tech</li>
+                            <li>Clarify functional doubts</li>
+                            <li>Accept/reject deliveries</li>
+                            <li>Report bugs during UAT</li>
+                        </ul>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Decision Power</div>
+                        <span class="decision-badge decision-yes">✅ Feature scope</span>
+                        <span class="decision-badge decision-yes">✅ Acceptance approval</span>
+                        <span class="decision-badge decision-no">❌ Tech decisions</span>
                     </div>
                 </div>
             </div>
-            <div class="slide-number">Slide 12</div>
-        </div>
 
-        <!-- Slide 13: Thank You -->
-        <div class="slide">
-            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center;">
-                <h1 style="font-size: 3.5em; color: #667eea; margin-bottom: 30px;">Thank You</h1>
-                <p style="font-size: 1.5em; color: #666; margin-bottom: 20px;">Questions & Discussion</p>
-                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px 40px; border-radius: 10px;">
-                    <p style="font-size: 1.3em;">Dr. Salu Agarwal</p>
+            <div id="process" class="tab-content">
+                <h2>4️⃣ End-to-End Process Flow</h2>
+
+                <div class="flow-step">
+                    <h4>Step 1: Product Finalization</h4>
+                    <ul>
+                        <li>Product team defines feature & flow</li>
+                        <li>Design team prepares UI/UX</li>
+                        <li>Product approves design</li>
+                    </ul>
+                </div>
+
+                <div class="flow-step">
+                    <h4>Step 2: Feature Grooming</h4>
+                    <ul>
+                        <li>Product grooms feature to tech team</li>
+                        <li>All doubts clarified ONLY by product</li>
+                        <li>No dev assumptions allowed</li>
+                    </ul>
+                </div>
+
+                <div class="flow-step">
+                    <h4>Step 3: Timeline Estimation</h4>
+                    <ul>
+                        <li>SEM + Frontend Architect estimate delivery</li>
+                        <li>Timeline shared with product team</li>
+                        <li><strong>Example:</strong> Total duration: 2 months | Sprint size: 2 weeks | Total sprints: 4</li>
+                    </ul>
+                </div>
+
+                <div class="flow-step">
+                    <h4>Step 4: Sprint Planning</h4>
+                    <p>Each sprint includes:</p>
+                    <ul>
+                        <li>Frontend tasks</li>
+                        <li>Backend tasks</li>
+                        <li>Tasks assigned by SEM</li>
+                        <li>Sprint commitment locked</li>
+                    </ul>
+                </div>
+
+                <div class="flow-step">
+                    <h4>Step 5: Ticket Impact Analysis (Critical Fix)</h4>
+                    <p><strong>Before development starts:</strong></p>
+                    <div class="impact-flow">
+                        <div>Developer</div>
+                        <div class="arrow">↓</div>
+                        <div>Ticket Impact Analysis</div>
+                        <div class="arrow">↓</div>
+                        <div>Frontend Architect Approval</div>
+                        <div class="arrow">↓</div>
+                        <div>Senior Engineering Manager Approval</div>
+                        <div class="arrow">↓</div>
+                        <div>Development Starts</div>
+                    </div>
+                    <p><strong>Impact Analysis Includes:</strong></p>
+                    <ul>
+                        <li>Architecture impact</li>
+                        <li>API changes</li>
+                        <li>Data model changes</li>
+                        <li>Performance risks</li>
+                        <li>Timeline risks</li>
+                    </ul>
+                </div>
+
+                <div class="flow-step">
+                    <h4>Step 6: Development & Testing</h4>
+                    <ul>
+                        <li>Dev builds feature</li>
+                        <li>Unit & basic integration tests</li>
+                        <li>Deploy to staging</li>
+                    </ul>
+                </div>
+
+                <div class="flow-step">
+                    <h4>Step 7: Product Handover (T-4 Days)</h4>
+                    <ul>
+                        <li>Feature handed to product team 4 days before sprint end</li>
+                        <li>Product performs UAT</li>
+                        <li>Bugs logged</li>
+                    </ul>
+                </div>
+
+                <div class="flow-step">
+                    <h4>Step 8: Bug Fix & Closure</h4>
+                    <ul>
+                        <li>Dev fixes bugs</li>
+                        <li>Product validates fixes</li>
+                        <li>Sprint closed</li>
+                    </ul>
+                </div>
+
+                <div class="flow-step">
+                    <h4>Step 9: Spillover Handling</h4>
+                    <p>If a task is not completed:</p>
+                    <ul>
+                        <li>Task spills to next sprint</li>
+                        <li>SEM + Architect review reason</li>
+                        <li>Performance score may be impacted</li>
+                        <li>Final authority: SEM / Architect / CTO</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="performance" class="tab-content">
+                <h2>5️⃣ Performance Accountability Rules</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Scenario</th>
+                            <th>Impact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Repeated spillovers</td>
+                            <td>Performance score reduction</td>
+                        </tr>
+                        <tr>
+                            <td>No impact analysis</td>
+                            <td>Sprint failure</td>
+                        </tr>
+                        <tr>
+                            <td>Architecture violation</td>
+                            <td>Escalation</td>
+                        </tr>
+                        <tr>
+                            <td>Late bug fixes</td>
+                            <td>Performance impact</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2 style="margin-top: 40px;">6️⃣ Why This Flow Fixes Current Issues</h2>
+                
+                <div class="role-card" style="border-left-color: #28a745;">
+                    <ul style="list-style: none; margin-left: 0;">
+                        <li>✅ No ambiguity in ownership</li>
+                        <li>✅ No dev-driven architecture drift</li>
+                        <li>✅ Product clarity before development</li>
+                        <li>✅ Controlled sprint spillovers</li>
+                        <li>✅ Predictable delivery</li>
+                    </ul>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="controls">
-        <button id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
-        <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
     </div>
 
     <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        const totalSlides = slides.length;
-
-        function showSlide(n) {
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (n + totalSlides) % totalSlides;
-            slides[currentSlide].classList.add('active');
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
             
-            document.getElementById('prevBtn').disabled = currentSlide === 0;
-            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
         }
-
-        function changeSlide(direction) {
-            showSlide(currentSlide + direction);
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') changeSlide(-1);
-            if (e.key === 'ArrowRight') changeSlide(1);
-        });
-
-        showSlide(0);
     </script>
 </body>
 </html>
