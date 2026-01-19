@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech Process Flow & Responsibilities</title>
+    <title>Antiplatelet Drugs, Fibrinolytics and Antifibrinolytics</title>
     <style>
         * {
             margin: 0;
@@ -12,671 +12,334 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             padding: 20px;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .presentation-container {
+            width: 100%;
+            max-width: 1000px;
             background: white;
-            border-radius: 16px;
+            border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
         }
 
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-        .header p {
-            opacity: 0.9;
-            font-size: 14px;
-        }
-
-        .tabs {
-            display: flex;
-            background: #f8f9fa;
-            border-bottom: 2px solid #e9ecef;
-            overflow-x: auto;
-        }
-
-        .tab {
-            padding: 16px 24px;
-            cursor: pointer;
-            border: none;
-            background: none;
-            font-size: 15px;
-            font-weight: 500;
-            color: #6c757d;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
-
-        .tab:hover {
-            background: #e9ecef;
-            color: #495057;
-        }
-
-        .tab.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-            background: white;
-        }
-
-        .content {
-            padding: 30px;
-            min-height: 400px;
-        }
-
-        .tab-content {
+        .slide {
             display: none;
-            animation: fadeIn 0.3s;
+            min-height: 600px;
+            padding: 60px;
+            position: relative;
         }
 
-        .tab-content.active {
-            display: block;
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .slide-number {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 48px;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.2;
         }
 
         h2 {
             color: #667eea;
-            margin-bottom: 20px;
+            font-size: 42px;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 4px solid #667eea;
+            padding-bottom: 20px;
+        }
+
+        .subtitle {
+            color: #4a5568;
             font-size: 24px;
+            text-align: center;
+            margin-bottom: 15px;
         }
 
-        h3 {
-            color: #495057;
-            margin: 20px 0 12px 0;
-            font-size: 18px;
-        }
-
-        .org-chart {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-            font-family: monospace;
-            white-space: pre;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        th {
-            background: #667eea;
-            color: white;
+        .author {
+            color: #718096;
+            font-size: 28px;
+            text-align: center;
+            margin-top: 40px;
             font-weight: 600;
         }
 
-        tr:hover {
-            background: #f8f9fa;
+        .content-box {
+            background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border-left: 6px solid #667eea;
         }
 
-        .role-card {
-            background: #f8f9fa;
-            border-left: 4px solid #667eea;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 8px;
+        .content-box h3 {
+            color: #2d3748;
+            font-size: 28px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
         }
 
-        .role-card h3 {
-            margin-top: 0;
+        .content-box h3::before {
+            content: "▸";
             color: #667eea;
+            margin-right: 15px;
+            font-size: 32px;
         }
 
-        .section {
+        .content-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .content-box li {
+            color: #4a5568;
+            font-size: 20px;
             margin: 15px 0;
-        }
-
-        .section-title {
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 8px;
-        }
-
-        ul {
-            margin-left: 20px;
-            margin-top: 8px;
-        }
-
-        li {
-            margin: 6px 0;
+            padding-left: 30px;
+            position: relative;
             line-height: 1.6;
         }
 
-        .decision-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-            margin: 2px;
+        .content-box li::before {
+            content: "•";
+            color: #667eea;
+            font-size: 28px;
+            position: absolute;
+            left: 0;
         }
 
-        .decision-yes {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .decision-no {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .flow-step {
+        .mechanism-box {
             background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 15px;
             border: 2px solid #667eea;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
         }
 
-        .flow-step h4 {
+        .thank-you {
+            font-size: 72px;
             color: #667eea;
-            margin-bottom: 8px;
-        }
-
-        .key-principle {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 4px;
-        }
-
-        .impact-flow {
             text-align: center;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
             padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin: 20px 0;
         }
 
-        .impact-flow div {
-            margin: 10px 0;
-            padding: 10px;
-            background: white;
-            border-radius: 4px;
-            display: inline-block;
-            min-width: 250px;
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .arrow {
-            font-size: 24px;
-            color: #667eea;
-            margin: 5px 0;
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        button:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .slide-indicator {
+            text-align: center;
+            color: white;
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🧩 Tech Process Flow, Roles & Responsibilities</h1>
-            <p>Clear Decision Rights | Non-Overlapping Ownership | Defined Approval Authority</p>
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>ANTIPLATELET DRUGS,<br>FIBRINOLYTICS AND<br>ANTIFIBRINOLYTICS</h1>
+            <p class="subtitle">(AHS3 Credit)</p>
+            <p class="author">Dr. Salu Agarwal</p>
+            <div class="slide-number">1 / 6</div>
         </div>
 
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('structure')">Company Structure</button>
-            <button class="tab" onclick="showTab('decisions')">Decision Matrix</button>
-            <button class="tab" onclick="showTab('roles')">Roles & Responsibilities</button>
-            <button class="tab" onclick="showTab('process')">Process Flow</button>
-            <button class="tab" onclick="showTab('performance')">Performance & Fixes</button>
+        <!-- Slide 2: Antiplatelet Drugs -->
+        <div class="slide">
+            <h2>ANTIPLATELET DRUGS</h2>
+            <div class="content-box">
+                <h3>Classification of Antiplatelet Drugs</h3>
+                <ul>
+                    <li><strong>Cyclooxygenase Inhibitors:</strong> Aspirin</li>
+                    <li><strong>ADP Receptor Antagonists:</strong> Clopidogrel, Prasugrel, Ticagrelor, Ticlopidine</li>
+                    <li><strong>Glycoprotein IIb/IIIa Inhibitors:</strong> Abciximab, Tirofiban, Eptifibatide</li>
+                    <li><strong>Phosphodiesterase Inhibitors:</strong> Dipyridamole, Cilostazol</li>
+                    <li><strong>Protease-Activated Receptor-1 Antagonist:</strong> Vorapaxar</li>
+                </ul>
+            </div>
+            <div class="slide-number">2 / 6</div>
         </div>
 
-        <div class="content">
-            <div id="structure" class="tab-content active">
-                <h2>1️⃣ Company Tech Structure</h2>
-                
-                <div class="org-chart">CTO
- ├── Senior Engineering Manager (SEM)
- │    ├── Frontend Architect
- │    │    └── Frontend Developers
- │    └── Backend Developers (4)
- └── Design Team
-
-Product Team (Independent)</div>
-
-                <div class="key-principle">
-                    <strong>Key Principle:</strong> Each role has clear decision rights, non-overlapping ownership, and defined approval authority.
+        <!-- Slide 3: Aspirin Mechanism -->
+        <div class="slide">
+            <h2>ANTIPLATELET ACTION OF ASPIRIN</h2>
+            <div class="content-box">
+                <h3>Mechanism of Action</h3>
+                <div class="mechanism-box">
+                    <p style="color: #2d3748; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
+                        Aspirin irreversibly inhibits cyclooxygenase (COX-1) enzyme by acetylating serine residue at position 530.
+                    </p>
+                    <p style="color: #2d3748; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
+                        This prevents the conversion of arachidonic acid to thromboxane A2 (TXA2) in platelets.
+                    </p>
+                    <p style="color: #2d3748; font-size: 20px; line-height: 1.8;">
+                        <strong>Result:</strong> Decreased platelet aggregation and reduced thrombus formation. The effect lasts for the lifespan of the platelet (7-10 days).
+                    </p>
                 </div>
             </div>
+            <div class="slide-number">3 / 6</div>
+        </div>
 
-            <div id="decisions" class="tab-content">
-                <h2>2️⃣ Decision Ownership Matrix</h2>
-                
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Area</th>
-                            <th>Decision Owner</th>
-                            <th>Approval Required From</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Product vision & feature scope</td>
-                            <td>Product Team</td>
-                            <td>CTO (high impact only)</td>
-                        </tr>
-                        <tr>
-                            <td>UX flow & design</td>
-                            <td>Design Team</td>
-                            <td>Product Team</td>
-                        </tr>
-                        <tr>
-                            <td>Architecture & technical flow</td>
-                            <td>Frontend Architect</td>
-                            <td>SEM</td>
-                        </tr>
-                        <tr>
-                            <td>Sprint planning & delivery timeline</td>
-                            <td>SEM + Frontend Architect</td>
-                            <td>Product Team</td>
-                        </tr>
-                        <tr>
-                            <td>Ticket impact & feasibility</td>
-                            <td>Dev → Architect</td>
-                            <td>SEM</td>
-                        </tr>
-                        <tr>
-                            <td>Performance & accountability</td>
-                            <td>SEM</td>
-                            <td>CTO</td>
-                        </tr>
-                        <tr>
-                            <td>Final go-live approval</td>
-                            <td>SEM</td>
-                            <td>Product Team</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <!-- Slide 4: Uses of Antiplatelet -->
+        <div class="slide">
+            <h2>THERAPEUTIC USES</h2>
+            <div class="content-box">
+                <h3>Indications for Antiplatelet Drugs</h3>
+                <ul>
+                    <li>Acute coronary syndrome (unstable angina, myocardial infarction)</li>
+                    <li>Prevention of stroke and transient ischemic attacks (TIA)</li>
+                    <li>Following coronary artery bypass graft (CABG) surgery</li>
+                    <li>Following percutaneous coronary intervention (PCI) with stent placement</li>
+                    <li>Peripheral arterial disease</li>
+                    <li>Atrial fibrillation (as alternative or adjunct to anticoagulation)</li>
+                    <li>Prevention of cardiovascular events in high-risk patients</li>
+                </ul>
             </div>
+            <div class="slide-number">4 / 6</div>
+        </div>
 
-            <div id="roles" class="tab-content">
-                <h2>3️⃣ Roles & Responsibilities</h2>
-
-                <div class="role-card">
-                    <h3>🔹 CTO (Chief Technology Officer)</h3>
-                    <div class="section">
-                        <div class="section-title">Ownership</div>
-                        <ul>
-                            <li>Overall technology strategy</li>
-                            <li>People, process, and architecture governance</li>
-                            <li>Owns Senior Engineering Manager and Design Team</li>
-                        </ul>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Responsibilities</div>
-                        <ul>
-                            <li>Define long-term tech vision and standards</li>
-                            <li>Resolve cross-team conflicts</li>
-                            <li>Final escalation authority</li>
-                            <li>Performance governance framework</li>
-                            <li>Approve major architectural changes</li>
-                            <li>Ensure delivery predictability</li>
-                        </ul>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Decision Power</div>
-                        <span class="decision-badge decision-yes">✅ Hire/fire</span>
-                        <span class="decision-badge decision-yes">✅ Performance impact approval</span>
-                        <span class="decision-badge decision-yes">✅ Tech stack decisions</span>
-                        <span class="decision-badge decision-yes">✅ Architecture veto power</span>
-                    </div>
-                </div>
-
-                <div class="role-card">
-                    <h3>🔹 Senior Engineering Manager (SEM)</h3>
-                    <div class="section">
-                        <div class="section-title">Ownership</div>
-                        <ul>
-                            <li>Delivery, execution, and performance</li>
-                            <li>Sprint commitments and timelines</li>
-                            <li>Owns Frontend Architect & Backend Devs</li>
-                        </ul>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Responsibilities</div>
-                        <ul>
-                            <li>Convert product scope into delivery plans</li>
-                            <li>Sprint planning & capacity management</li>
-                            <li>Approve timelines & sprint breakdown</li>
-                            <li>Track sprint health</li>
-                            <li>Handle spillovers & performance impact</li>
-                            <li>Ensure dev adherence to process</li>
-                        </ul>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Decision Power</div>
-                        <span class="decision-badge decision-yes">✅ Sprint planning</span>
-                        <span class="decision-badge decision-yes">✅ Task spillover decision</span>
-                        <span class="decision-badge decision-yes">✅ Performance score impact</span>
-                        <span class="decision-badge decision-yes">✅ Dev allocation</span>
-                    </div>
-                </div>
-
-                <div class="role-card">
-                    <h3>🔹 Frontend Architect</h3>
-                    <div class="section">
-                        <div class="section-title">Ownership</div>
-                        <ul>
-                            <li>System architecture</li>
-                            <li>Frontend + integration flow</li>
-                            <li>Code quality & scalability</li>
-                        </ul>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Responsibilities</div>
-                        <ul>
-                            <li>Define technical architecture</li>
-                            <li>Review ticket impact analysis</li>
-                            <li>Approve frontend + API contracts</li>
-                            <li>Ensure architecture alignment</li>
-                            <li>Guide frontend developers</li>
-                            <li>Prevent tech debt</li>
-                        </ul>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Decision Power</div>
-                        <span class="decision-badge decision-yes">✅ Architecture approval</span>
-                        <span class="decision-badge decision-yes">✅ Impact analysis approval</span>
-                        <span class="decision-badge decision-yes">✅ Frontend standards</span>
-                    </div>
-                </div>
-
-                <div class="role-card">
-                    <h3>🔹 Backend Developers</h3>
-                    <div class="section">
-                        <div class="section-title">Ownership</div>
-                        <ul>
-                            <li>Backend APIs, services, data models</li>
-                        </ul>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Responsibilities</div>
-                        <ul>
-                            <li>Perform ticket impact analysis</li>
-                            <li>Build APIs as per approved design</li>
-                            <li>Write unit tests</li>
-                            <li>Deploy backend services</li>
-                            <li>Fix reported bugs</li>
-                            <li>Meet sprint commitments</li>
-                        </ul>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Decision Power</div>
-                        <span class="decision-badge decision-no">❌ No architectural decisions</span>
-                        <span class="decision-badge decision-no">❌ No scope change authority</span>
-                    </div>
-                </div>
-
-                <div class="role-card">
-                    <h3>🔹 Frontend Developers</h3>
-                    <div class="section">
-                        <div class="section-title">Ownership</div>
-                        <ul>
-                            <li>UI implementation & integration</li>
-                        </ul>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Responsibilities</div>
-                        <ul>
-                            <li>Perform ticket impact analysis</li>
-                            <li>Build UI as per design</li>
-                            <li>Integrate APIs</li>
-                            <li>Unit + basic integration testing</li>
-                            <li>Fix bugs reported by product team</li>
-                            <li>Meet sprint commitments</li>
-                        </ul>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Decision Power</div>
-                        <span class="decision-badge decision-no">❌ No design changes</span>
-                        <span class="decision-badge decision-no">❌ No architecture changes</span>
-                    </div>
-                </div>
-
-                <div class="role-card">
-                    <h3>🔹 Design Team</h3>
-                    <div class="section">
-                        <div class="section-title">Ownership</div>
-                        <ul>
-                            <li>UX/UI & user flows</li>
-                        </ul>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Responsibilities</div>
-                        <ul>
-                            <li>Create product flow designs</li>
-                            <li>Provide design specs & assets</li>
-                            <li>Clarify UI/UX doubts</li>
-                            <li>Maintain design consistency</li>
-                        </ul>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Decision Power</div>
-                        <span class="decision-badge decision-yes">✅ UI/UX design authority</span>
-                        <span class="decision-badge decision-no">❌ No feature scope control</span>
-                    </div>
-                </div>
-
-                <div class="role-card">
-                    <h3>🔹 Product Team</h3>
-                    <div class="section">
-                        <div class="section-title">Ownership</div>
-                        <ul>
-                            <li>What to build & why</li>
-                            <li>Feature prioritization</li>
-                        </ul>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Responsibilities</div>
-                        <ul>
-                            <li>Finalize product flow</li>
-                            <li>Define feature scope</li>
-                            <li>Get designs done</li>
-                            <li>Groom features to tech</li>
-                            <li>Clarify functional doubts</li>
-                            <li>Accept/reject deliveries</li>
-                            <li>Report bugs during UAT</li>
-                        </ul>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Decision Power</div>
-                        <span class="decision-badge decision-yes">✅ Feature scope</span>
-                        <span class="decision-badge decision-yes">✅ Acceptance approval</span>
-                        <span class="decision-badge decision-no">❌ Tech decisions</span>
-                    </div>
-                </div>
+        <!-- Slide 5: Fibrinolytics -->
+        <div class="slide">
+            <h2>FIBRINOLYTICS</h2>
+            <div class="content-box">
+                <h3>List of Fibrinolytic Agents</h3>
+                <ul>
+                    <li><strong>First Generation:</strong> Streptokinase, Urokinase</li>
+                    <li><strong>Second Generation:</strong> Alteplase (rt-PA), Anistreplase (APSAC)</li>
+                    <li><strong>Third Generation:</strong> Reteplase, Tenecteplase</li>
+                </ul>
             </div>
-
-            <div id="process" class="tab-content">
-                <h2>4️⃣ End-to-End Process Flow</h2>
-
-                <div class="flow-step">
-                    <h4>Step 1: Product Finalization</h4>
-                    <ul>
-                        <li>Product team defines feature & flow</li>
-                        <li>Design team prepares UI/UX</li>
-                        <li>Product approves design</li>
-                    </ul>
-                </div>
-
-                <div class="flow-step">
-                    <h4>Step 2: Feature Grooming</h4>
-                    <ul>
-                        <li>Product grooms feature to tech team</li>
-                        <li>All doubts clarified ONLY by product</li>
-                        <li>No dev assumptions allowed</li>
-                    </ul>
-                </div>
-
-                <div class="flow-step">
-                    <h4>Step 3: Timeline Estimation</h4>
-                    <ul>
-                        <li>SEM + Frontend Architect estimate delivery</li>
-                        <li>Timeline shared with product team</li>
-                        <li><strong>Example:</strong> Total duration: 2 months | Sprint size: 2 weeks | Total sprints: 4</li>
-                    </ul>
-                </div>
-
-                <div class="flow-step">
-                    <h4>Step 4: Sprint Planning</h4>
-                    <p>Each sprint includes:</p>
-                    <ul>
-                        <li>Frontend tasks</li>
-                        <li>Backend tasks</li>
-                        <li>Tasks assigned by SEM</li>
-                        <li>Sprint commitment locked</li>
-                    </ul>
-                </div>
-
-                <div class="flow-step">
-                    <h4>Step 5: Ticket Impact Analysis (Critical Fix)</h4>
-                    <p><strong>Before development starts:</strong></p>
-                    <div class="impact-flow">
-                        <div>Developer</div>
-                        <div class="arrow">↓</div>
-                        <div>Ticket Impact Analysis</div>
-                        <div class="arrow">↓</div>
-                        <div>Frontend Architect Approval</div>
-                        <div class="arrow">↓</div>
-                        <div>Senior Engineering Manager Approval</div>
-                        <div class="arrow">↓</div>
-                        <div>Development Starts</div>
-                    </div>
-                    <p><strong>Impact Analysis Includes:</strong></p>
-                    <ul>
-                        <li>Architecture impact</li>
-                        <li>API changes</li>
-                        <li>Data model changes</li>
-                        <li>Performance risks</li>
-                        <li>Timeline risks</li>
-                    </ul>
-                </div>
-
-                <div class="flow-step">
-                    <h4>Step 6: Development & Testing</h4>
-                    <ul>
-                        <li>Dev builds feature</li>
-                        <li>Unit & basic integration tests</li>
-                        <li>Deploy to staging</li>
-                    </ul>
-                </div>
-
-                <div class="flow-step">
-                    <h4>Step 7: Product Handover (T-4 Days)</h4>
-                    <ul>
-                        <li>Feature handed to product team 4 days before sprint end</li>
-                        <li>Product performs UAT</li>
-                        <li>Bugs logged</li>
-                    </ul>
-                </div>
-
-                <div class="flow-step">
-                    <h4>Step 8: Bug Fix & Closure</h4>
-                    <ul>
-                        <li>Dev fixes bugs</li>
-                        <li>Product validates fixes</li>
-                        <li>Sprint closed</li>
-                    </ul>
-                </div>
-
-                <div class="flow-step">
-                    <h4>Step 9: Spillover Handling</h4>
-                    <p>If a task is not completed:</p>
-                    <ul>
-                        <li>Task spills to next sprint</li>
-                        <li>SEM + Architect review reason</li>
-                        <li>Performance score may be impacted</li>
-                        <li>Final authority: SEM / Architect / CTO</li>
-                    </ul>
-                </div>
+            <div class="content-box" style="margin-top: 25px;">
+                <h3>Therapeutic Uses</h3>
+                <ul>
+                    <li>Acute ST-elevation myocardial infarction (STEMI)</li>
+                    <li>Acute ischemic stroke (within therapeutic window)</li>
+                    <li>Massive pulmonary embolism</li>
+                    <li>Deep vein thrombosis (selected cases)</li>
+                    <li>Peripheral arterial occlusion</li>
+                </ul>
             </div>
+            <div class="slide-number">5 / 6</div>
+        </div>
 
-            <div id="performance" class="tab-content">
-                <h2>5️⃣ Performance Accountability Rules</h2>
-                
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Scenario</th>
-                            <th>Impact</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Repeated spillovers</td>
-                            <td>Performance score reduction</td>
-                        </tr>
-                        <tr>
-                            <td>No impact analysis</td>
-                            <td>Sprint failure</td>
-                        </tr>
-                        <tr>
-                            <td>Architecture violation</td>
-                            <td>Escalation</td>
-                        </tr>
-                        <tr>
-                            <td>Late bug fixes</td>
-                            <td>Performance impact</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h2 style="margin-top: 40px;">6️⃣ Why This Flow Fixes Current Issues</h2>
-                
-                <div class="role-card" style="border-left-color: #28a745;">
-                    <ul style="list-style: none; margin-left: 0;">
-                        <li>✅ No ambiguity in ownership</li>
-                        <li>✅ No dev-driven architecture drift</li>
-                        <li>✅ Product clarity before development</li>
-                        <li>✅ Controlled sprint spillovers</li>
-                        <li>✅ Predictable delivery</li>
-                    </ul>
-                </div>
+        <!-- Slide 6: Antifibrinolytics -->
+        <div class="slide">
+            <h2>ANTIFIBRINOLYTICS</h2>
+            <div class="content-box">
+                <h3>List of Antifibrinolytic Agents</h3>
+                <ul>
+                    <li><strong>Lysine Analogues:</strong> Tranexamic acid, Epsilon-aminocaproic acid (EACA)</li>
+                    <li><strong>Serine Protease Inhibitor:</strong> Aprotinin</li>
+                </ul>
             </div>
+            <div class="content-box" style="margin-top: 25px;">
+                <h3>Therapeutic Uses</h3>
+                <ul>
+                    <li>Control of bleeding during cardiac surgery</li>
+                    <li>Management of menorrhagia (heavy menstrual bleeding)</li>
+                    <li>Prevention of bleeding in hemophilia patients undergoing dental procedures</li>
+                    <li>Treatment of hereditary angioedema</li>
+                    <li>Control of bleeding in trauma and postpartum hemorrhage</li>
+                    <li>Prevention of rebleeding in subarachnoid hemorrhage</li>
+                </ul>
+            </div>
+            <div class="slide-number">6 / 6</div>
+        </div>
+
+        <!-- Slide 7: Thank You -->
+        <div class="slide">
+            <div class="thank-you">THANK YOU</div>
+            <div class="slide-number">7 / 6</div>
         </div>
     </div>
 
+    <div class="controls">
+        <button id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
+    </div>
+    <div class="slide-indicator">
+        <span id="currentSlide">1</span> of <span id="totalSlides">7</span>
+    </div>
+
     <script>
-        function showTab(tabName) {
-            const tabs = document.querySelectorAll('.tab');
-            const contents = document.querySelectorAll('.tab-content');
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
             
-            tabs.forEach(tab => tab.classList.remove('active'));
-            contents.forEach(content => content.classList.remove('active'));
-            
-            event.target.classList.add('active');
-            document.getElementById(tabName).classList.add('active');
+            document.getElementById('currentSlide').textContent = currentSlide + 1;
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
         }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        showSlide(0);
     </script>
 </body>
 </html>
