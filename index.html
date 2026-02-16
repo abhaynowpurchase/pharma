@@ -1,1953 +1,656 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Engineering & Product Process Framework</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --navy: #1E2761;
-            --ice-blue: #CADCFC;
-            --teal: #0891B2;
-            --white: #FFFFFF;
-            --light-gray: #F8FAFC;
-            --medium-gray: #94A3B8;
-            --dark-gray: #334155;
-            --success: #10B981;
-            --warning: #F59E0B;
-            --error: #EF4444;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--navy);
-            color: var(--dark-gray);
-            overflow: hidden;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .presentation {
-            width: 100%;
-            height: 100vh;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .slide {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transform: translateX(100%);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 60px 80px 120px 80px;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-        
-        .slide::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        .slide::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .slide::-webkit-scrollbar-thumb {
-            background: var(--teal);
-            border-radius: 4px;
-        }
-
-        .slide.active {
-            opacity: 1;
-            transform: translateX(0);
-            z-index: 1;
-        }
-
-        .slide.prev {
-            transform: translateX(-100%);
-        }
-
-        /* Navigation */
-        .nav-controls {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            z-index: 1000;
-            background: rgba(30, 39, 97, 0.95);
-            padding: 15px 30px;
-            border-radius: 50px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .nav-btn {
-            background: var(--teal);
-            color: white;
-            border: none;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-
-        .nav-btn:hover {
-            background: #0c9fbe;
-            transform: scale(1.1);
-        }
-
-        .nav-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        .slide-counter {
-            color: var(--ice-blue);
-            font-weight: 600;
-            font-size: 16px;
-            min-width: 80px;
-            text-align: center;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 4px;
-            background: var(--teal);
-            transition: width 0.3s;
-            z-index: 1001;
-        }
-
-        /* Slide Backgrounds */
-        .slide-dark {
-            background: var(--navy);
-            color: var(--white);
-        }
-
-        .slide-light {
-            background: var(--light-gray);
-            color: var(--dark-gray);
-        }
-
-        .slide-white {
-            background: var(--white);
-            color: var(--dark-gray);
-        }
-
-        /* Typography */
-        .slide-title {
-            font-size: 56px;
-            font-weight: 800;
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-
-        .slide-subtitle {
-            font-size: 24px;
-            opacity: 0.8;
-            margin-bottom: 40px;
-            font-style: italic;
-        }
-
-        .section-title {
-            font-size: 42px;
-            font-weight: 700;
-            margin-bottom: 30px;
-        }
-
-        .accent-bar {
-            width: 8px;
-            height: 100%;
-            background: var(--teal);
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
-
-        /* Components */
-        .golden-rule {
-            background: var(--teal);
-            padding: 50px;
-            border-radius: 20px;
-            text-align: center;
-            margin: auto;
-            max-width: 800px;
-            box-shadow: 0 20px 60px rgba(8, 145, 178, 0.4);
-        }
-
-        .golden-rule h2 {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-
-        .toc-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .toc-number {
-            background: var(--teal);
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .toc-content h3 {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-        .toc-content p {
-            opacity: 0.8;
-        }
-
-        .flow-container {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin: 30px 0;
-        }
-
-        .flow-box {
-            background: white;
-            padding: 25px 35px;
-            border-radius: 12px;
-            font-weight: 600;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            flex: 1;
-            min-width: 180px;
-        }
-
-        .flow-arrow {
-            font-size: 32px;
-            color: var(--teal);
-            font-weight: 700;
-        }
-
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin: 30px 0;
-        }
-
-        .three-col {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin: 30px 0;
-        }
-
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .card h3 {
-            font-size: 22px;
-            margin-bottom: 15px;
-            color: var(--navy);
-        }
-
-        .card ul {
-            list-style: none;
-        }
-
-        .card ul li {
-            padding: 10px 0;
-            border-bottom: 1px solid #E2E8F0;
-        }
-
-        .card ul li:last-child {
-            border-bottom: none;
-        }
-
-        .role-card {
-            background: linear-gradient(135deg, var(--navy) 0%, #2d3a7d 100%);
-            color: white;
-            padding: 35px;
-            border-radius: 16px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .role-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 6px;
-            background: var(--teal);
-        }
-
-        .role-card h3 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: var(--ice-blue);
-        }
-
-        .role-card ul {
-            list-style: none;
-        }
-
-        .role-card ul li {
-            padding: 12px 0;
-            padding-left: 30px;
-            position: relative;
-        }
-
-        .role-card ul li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--teal);
-            font-weight: 700;
-            font-size: 20px;
-        }
-
-        .info-box {
-            background: #E0F2FE;
-            border-left: 6px solid var(--teal);
-            padding: 25px;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-
-        .info-box h3 {
-            color: var(--navy);
-            margin-bottom: 12px;
-        }
-
-        .warning-box {
-            background: #FEF3C7;
-            border-left: 6px solid var(--warning);
-            padding: 25px;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-
-        .error-box {
-            background: #FEE2E2;
-            border-left: 6px solid var(--error);
-            padding: 25px;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-
-        .success-box {
-            background: #D1FAE5;
-            border-left: 6px solid var(--success);
-            padding: 25px;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        thead {
-            background: var(--navy);
-            color: white;
-        }
-
-        th {
-            padding: 20px;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        td {
-            padding: 18px 20px;
-            border-bottom: 1px solid #E2E8F0;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        .severity-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .severity-card {
-            padding: 25px;
-            border-radius: 12px;
-            text-align: center;
-            color: white;
-        }
-
-        .severity-card h3 {
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-
-        .severity-card p {
-            margin: 8px 0;
-            opacity: 0.95;
-        }
-
-        .severity-card .time {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid rgba(255, 255, 255, 0.3);
-            font-weight: 600;
-        }
-
-        .p0-card {
-            background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
-        }
-
-        .p1-card {
-            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
-        }
-
-        .p2-card {
-            background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
-        }
-
-        .p3-card {
-            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-        }
-
-        .comparison-table {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0;
-            margin: 30px 0;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .comparison-col {
-            padding: 30px;
-        }
-
-        .old-way {
-            background: #FEE2E2;
-            border-right: 4px solid var(--error);
-        }
-
-        .new-way {
-            background: #D1FAE5;
-        }
-
-        .comparison-col h3 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .comparison-col ul {
-            list-style: none;
-        }
-
-        .comparison-col ul li {
-            padding: 12px 0;
-            padding-left: 30px;
-            position: relative;
-        }
-
-        .old-way ul li::before {
-            content: '✗';
-            position: absolute;
-            left: 0;
-            color: var(--error);
-            font-weight: 700;
-            font-size: 20px;
-        }
-
-        .new-way ul li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--success);
-            font-weight: 700;
-            font-size: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agile Transformation - 2 Week Sprint System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #1a1a1a;
+      overflow: hidden;
+    }
+
+    .presentation {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+
+    .slide {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      display: flex;
+      flex-direction: column;
+      padding: 60px 80px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .slide.active {
+      opacity: 1;
+      z-index: 1;
+    }
+
+    .slide h1 {
+      font-size: 3.5em;
+      color: white;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .slide h2 {
+      font-size: 2.5em;
+      color: white;
+      margin-bottom: 30px;
+      border-bottom: 3px solid rgba(255,255,255,0.3);
+      padding-bottom: 15px;
+    }
+
+    .slide h3 {
+      font-size: 1.8em;
+      color: #fff;
+      margin-top: 25px;
+      margin-bottom: 15px;
+    }
+
+    .slide h4 {
+      font-size: 1.4em;
+      color: #ffd700;
+      margin-top: 15px;
+      margin-bottom: 10px;
+    }
+
+    .slide p, .slide li {
+      font-size: 1.2em;
+      color: white;
+      line-height: 1.6;
+    }
+
+    .subtitle {
+      font-size: 1.8em;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 40px;
+    }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 20px;
+    }
+
+    .content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .content::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+    }
+
+    .content::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.3);
+      border-radius: 4px;
+    }
+
+    .content ul {
+      list-style: none;
+      margin-left: 0;
+    }
+
+    .content li {
+      margin-bottom: 20px;
+      padding-left: 35px;
+      position: relative;
+    }
+
+    .content li:before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: #ffd700;
+      font-weight: bold;
+      font-size: 1.4em;
+    }
+
+    .highlight-box {
+      background: rgba(255,255,255,0.15);
+      border-left: 5px solid #ffd700;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 5px;
+      backdrop-filter: blur(10px);
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    .box {
+      background: rgba(255,255,255,0.1);
+      padding: 25px;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .box h4 {
+      margin-top: 0;
+      border-bottom: 2px solid #ffd700;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+
+    .hierarchy {
+      margin: 30px 0;
+    }
+
+    .hierarchy-item {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 8px;
+      border-left: 5px solid #ffd700;
+    }
+
+    .ceremony-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .ceremony-card {
+      background: rgba(255,255,255,0.15);
+      padding: 20px;
+      border-radius: 10px;
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .ceremony-card h4 {
+      margin-top: 0;
+      color: #ffd700;
+    }
+
+    .flow-stage {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 8px;
+      border-left: 4px solid #4CAF50;
+    }
+
+    .review-types {
+      background: rgba(255,255,255,0.08);
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 6px;
+    }
+
+    .benefit-item {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 8px;
+      border-left: 5px solid #4CAF50;
+    }
+
+    .benefit-item strong {
+      display: block;
+      font-size: 1.3em;
+      margin-bottom: 10px;
+      color: #ffd700;
+    }
+
+    .note {
+      font-style: italic;
+      color: rgba(255,255,255,0.8);
+      margin-top: 20px;
+      font-size: 1.1em;
+    }
+
+    .controls {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 1000;
+      display: flex;
+      gap: 15px;
+    }
+
+    .controls button {
+      background: rgba(255,255,255,0.2);
+      border: 2px solid white;
+      color: white;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .controls button:hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.05);
+    }
+
+    .controls button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .slide-counter {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      z-index: 1000;
+      color: white;
+      font-size: 1.2em;
+      background: rgba(0,0,0,0.3);
+      padding: 10px 20px;
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Slide-specific backgrounds */
+    .slide:nth-child(1) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .slide:nth-child(2) { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .slide:nth-child(3) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+    .slide:nth-child(4) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+    .slide:nth-child(5) { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+    .slide:nth-child(6) { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
+    .slide:nth-child(7) { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+    .slide:nth-child(8) { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
+    .slide:nth-child(9) { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+    .slide:nth-child(10) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+  </style>
 </head>
 <body>
-    <div class="progress-bar" id="progressBar"></div>
+  <div class="presentation">
     
-    <div class="presentation">
-        <!-- Slide 1: Title -->
-        <div class="slide slide-dark active" data-slide="1">
-            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-                <h1 class="slide-title">Engineering & Product<br/>Process Framework</h1>
-                <p class="slide-subtitle">Building quality software with clear processes and strong standards</p>
-            </div>
+    <!-- Slide 1: Title -->
+    <div class="slide active">
+      <h1>🚀 Agile Transformation</h1>
+      <p class="subtitle">Implementing 2-Week Sprint System</p>
+      <div class="content">
+        <div class="highlight-box">
+          <h3>Moving from Chaos to Collaboration</h3>
+          <p style="font-size: 1.4em; margin-top: 15px;">Building an independent, sustainable work culture through structured Agile practices</p>
         </div>
-
-        <!-- Slide 2: Table of Contents -->
-        <div class="slide slide-white" data-slide="2">
-            <div style="position: relative;">
-                <div class="accent-bar"></div>
-                <div style="margin-left: 30px;">
-                    <h2 class="section-title">What We'll Cover</h2>
-                    
-                    <div class="toc-item">
-                        <div class="toc-number">1</div>
-                        <div class="toc-content">
-                            <h3>Requirement Flow</h3>
-                            <p>Client requirements vs internal features and how they are analyzed</p>
-                        </div>
-                    </div>
-
-                    <div class="toc-item">
-                        <div class="toc-number">2</div>
-                        <div class="toc-content">
-                            <h3>Development Process</h3>
-                            <p>From idea to production with clear gates and responsibilities</p>
-                        </div>
-                    </div>
-
-                    <div class="toc-item">
-                        <div class="toc-number">3</div>
-                        <div class="toc-content">
-                            <h3>Sprint Management</h3>
-                            <p>Ticket readiness, sprint rules, and handling changes</p>
-                        </div>
-                    </div>
-
-                    <div class="toc-item">
-                        <div class="toc-number">4</div>
-                        <div class="toc-content">
-                            <h3>Quality & Review Process</h3>
-                            <p>Code reviews, impact analysis, and quality gates</p>
-                        </div>
-                    </div>
-
-                    <div class="toc-item">
-                        <div class="toc-number">5</div>
-                        <div class="toc-content">
-                            <h3>Bug Reporting & Validation</h3>
-                            <p>How bugs are reported, analyzed, and validated before sprint entry</p>
-                        </div>
-                    </div>
-
-                    <div class="toc-item">
-                        <div class="toc-number">6</div>
-                        <div class="toc-content">
-                            <h3>Priority Ticket Management</h3>
-                            <p>Handling urgent tickets mid-sprint with capacity management</p>
-                        </div>
-                    </div>
-
-                    <div class="toc-item">
-                        <div class="toc-number">7</div>
-                        <div class="toc-content">
-                            <h3>Change Requests & Production Bugs</h3>
-                            <p>Formal processes for changes and critical production issues</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 3: Golden Rule -->
-        <div class="slide slide-dark" data-slide="3">
-            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-                <div class="golden-rule">
-                    <h2>The Golden Rule</h2>
-                    <p style="font-size: 28px; margin-top: 15px;">No mid-sprint surprises.<br/>Requirements are frozen.<br/>Design is final.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 4: Requirement Flow -->
-        <div class="slide slide-light" data-slide="4">
-            <div style="position: relative;">
-                <div class="accent-bar"></div>
-                <div style="margin-left: 30px;">
-                    <h2 class="section-title">Requirement Flow</h2>
-                    <p class="slide-subtitle">How requirements move through the system</p>
-
-                    <div class="two-col">
-                        <div class="card">
-                            <h3>📋 Client Requirements</h3>
-                            <div style="margin-top: 20px;">
-                                <p style="margin-bottom: 15px;"><strong>Flow:</strong></p>
-                                <div class="flow-container" style="flex-direction: column; align-items: stretch;">
-                                    <div class="flow-box">Client Requirement</div>
-                              
-                               
-                                    <div class="flow-arrow" style="text-align: center;">↓</div>
-                                    <div class="flow-box">Tech Team Discussion</div>
-                                    <div class="flow-arrow" style="text-align: center;">↓</div>
-                                    <div class="flow-box">Internal Analysis<br/><small>(Senior Engineering Manager & Tech Leads + Dev Team)</small></div>
-                                    <div class="flow-arrow" style="text-align: center;">↓</div>
-                                    <div class="flow-box">Communication to Product Team<br/><small>(Timeline + Feasibility)</small></div>
-                                     <div class="flow-arrow" style="text-align: center;">↓</div>
-                                         <div class="flow-box">Proposal Creation</div>
-                                     <div class="flow-arrow" style="text-align: center;">↓</div>
-                                    <div class="flow-box">whole project got entered into jira</div>
-                                    <div class="flow-arrow" style="text-align: center;">↓</div>
-                                      <div class="flow-box">Product team will check the po than revert to tech </div>
-                                      <div class="flow-arrow" style="text-align: center;">↓</div>
-                                     <div class="flow-box">Tech started sprint system for that project </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <h3>💡 Internal Features/Modules</h3>
-                            <div style="margin-top: 20px;">
-                                <p style="margin-bottom: 15px;"><strong>Flow:</strong></p>
-                                <div class="flow-container" style="flex-direction: column; align-items: stretch;">
-                                    <div class="flow-box">Internal Idea/Feature</div>
-                                  
-                                    <div class="flow-arrow" style="text-align: center;">↓</div>
-                                    <div class="flow-box">Internal Analysis<br/><small>(Senior Engineering Manager & Tech Leads + Dev Team)</small></div>
-                                    <div class="flow-arrow" style="text-align: center;">↓</div>
-                                    <div class="flow-box">Communication to Product Team<br/><small>(Timeline + Feasibility)</small></div>
-                                      <div class="flow-arrow" style="text-align: center;">↓</div>
-                                    <div class="flow-box" style="background: #E0F2FE;">No Proposal Needed</div>
-                                      <div class="flow-arrow" style="text-align: center;">↓</div>
-                                      <div class="flow-box" style="background: #E0F2FE;">Priority wise can be entered into sprint</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="info-box">
-                        <h3>Key Points</h3>
-                        <p style="margin-bottom: 10px;">• Senior engineering manager & tech leads analyze requirements with the dev team</p>
-                        <p style="margin-bottom: 10px;">• Leads make timeline decisions based on team analysis</p>
-                        <p>• Product team is informed about feasibility and estimated timeline</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 5: Email Communication & Timeline Process -->
-        <div class="slide slide-white" data-slide="5">
-            <div style="position: relative;">
-                <div class="accent-bar"></div>
-                <div style="margin-left: 30px;">
-                    <h2 class="section-title">Email Communication & Timeline Process</h2>
-                    <p class="slide-subtitle">Formal requirement communication and analysis workflow</p>
-
-                    <div class="two-col">
-                        <div class="card" style="background: #E0F2FE; border-left: 6px solid var(--teal);">
-                            <h3>📧 Standard Process (24-48 Hours)</h3>
-                            <div style="margin-top: 20px;">
-                                <div class="flow-container" style="flex-direction: column; align-items: stretch;">
-                                    <div class="flow-box" style="background: white;">📨 Product Team Sends Requirement Email</div>
-                                    <div class="flow-arrow" style="text-align: center;">↓</div>
-                                    <div class="flow-box" style="background: #FEF3C7;">⏱️ 24-48 Hour Analysis Window</div>
-                                    <div class="flow-arrow" style="text-align: center;">↓</div>
-                                    <div class="flow-box" style="background: white;">🔍 Senior Engineering Manager & Tech Leads Analyze<br/><small>(Technical breakdown, effort estimation)</small></div>
-                                    <div class="flow-arrow" style="text-align: center;">↓</div>
-                                    <div class="flow-box" style="background: white;">📊 Create Jira Requirement<br/><small>(With delivery due date)</small></div>
-                                    <div class="flow-arrow" style="text-align: center;">↓</div>
-                                    <div class="flow-box" style="background: #D1FAE5;">✉️ Reply Email with Timeline<br/><small>(Delivery date, effort, dependencies)</small></div>
-                                      <div class="flow-arrow" style="text-align: center;">↓</div>
-                                     <div class="flow-box" style="background: #D1FAE5;">ONCE PO RECEIVES PRODUCT TEAM WILL COMMUNICATE AND PROJECT CAN BE DISTRIBUTED AT SPRINT SYSTEM</small></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card" style="background: #FEE2E2; border-left: 6px solid var(--error);">
-                            <h3>🚨 Urgent Process (12-18 Hours)</h3>
-                            <div style="margin-top: 20px;">
-                                <div class="flow-container" style="flex-direction: column; align-items: stretch;">
-                                    <div class="flow-box" style="background: white;">📨 Product Team Sends URGENT Email</div>
-                                    <div class="flow-arrow" style="text-align: center;">↓</div>
-                                    <div class="flow-box" style="background: #FEF3C7;">⚡ 12-18 Hour Analysis Window</div>
-                                    <div class="flow-arrow" style="text-align: center;">↓</div>
-                                    <div class="flow-box" style="background: white;">🔍 Rapid Analysis by Senior Engineering Manager & Tech Leads</div>
-                                    <div class="flow-arrow" style="text-align: center;">↓</div>
-                                    <div class="flow-box" style="background: white;">📊 Create Jira Requirement Immediately</div>
-                                    <div class="flow-arrow" style="text-align: center;">↓</div>
-                                    <div class="flow-box" style="background: #D1FAE5;">✉️ Reply Email + Start Development</div>
-                                    <div class="flow-arrow" style="text-align: center;">↓</div>
-                                    <div class="flow-box" style="background: #FEE2E2;">🎫 Take Tickets in Current Sprint<br/><small>(Adjust capacity as needed)</small></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="info-box" style="margin-top: 30px;">
-                        <h3>📋 What Senior Engineering Manager & Tech Leads Include in Reply Email</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
-                            <ul style="list-style: none;">
-                                <li style="padding: 10px 0; border-bottom: 1px solid #BAE6FD; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    <strong>Final delivery due date</strong>
-                                </li>
-                                <li style="padding: 10px 0; border-bottom: 1px solid #BAE6FD; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    <strong>Development timeline</strong> (total effort)
-                                </li>
-                                <li style="padding: 10px 0; border-bottom: 1px solid #BAE6FD; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    <strong>Sprint breakdown</strong> (how many sprints needed)
-                                </li>
-                            </ul>
-                            <ul style="list-style: none;">
-                                <li style="padding: 10px 0; border-bottom: 1px solid #BAE6FD; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    <strong>Resource allocation</strong>
-                                </li>
-                                <li style="padding: 10px 0; border-bottom: 1px solid #BAE6FD; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    <strong>Dependencies & risks</strong>
-                                </li>
-                                <li style="padding: 10px 0; border-bottom: 1px solid #BAE6FD; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    <strong>Assumptions & constraints</strong>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 6: Old vs New Process Comparison -->
-        <div class="slide slide-white" data-slide="6">
-            <div style="position: relative;">
-                <div class="accent-bar"></div>
-                <div style="margin-left: 30px;">
-                    <h2 class="section-title">Process Evolution</h2>
-                    <p class="slide-subtitle">What changed and why</p>
-
-                    <div class="comparison-table">
-                        <div class="comparison-col old-way">
-                            <h3>❌ Old Process Problems</h3>
-                            <ul>
-                                <li>Mid-sprint design changes allowed</li>
-                                <li>Requirements changed after freezing</li>
-                                <li>Feedback could come at any time</li>
-                                <li>Developers restarted work from scratch</li>
-                                <li>No clear gate for ticket readiness</li>
-                                <li>"Not up to mark" subjective rejections</li>
-                                <li>Unpredictable sprint commitments</li>
-                            </ul>
-                        </div>
-
-                        <div class="comparison-col new-way">
-                            <h3>✅ New Process Strengths</h3>
-                            <ul>
-                                <li>Design frozen before sprint starts</li>
-                                <li>All stakeholders review tickets upfront</li>
-                                <li>Impact analysis documents scope clearly</li>
-                                <li>Reviews only for deviations from plan</li>
-                                <li>Changes via formal change requests</li>
-                                <li>Production bugs take clear priority</li>
-                                <li>Predictable, sustainable delivery</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="success-box">
-                        <h3>🎯 Core Improvement</h3>
-                        <p>The new process eliminates rework by ensuring all stakeholders align on requirements, design, and approach <strong>before</strong> development begins. This protects developer time and ensures realistic sprint planning.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 6: Complete Development Flow -->
-        <div class="slide slide-light" data-slide="6">
-            <div style="position: relative;">
-                <div class="accent-bar"></div>
-                <div style="margin-left: 30px;">
-                    <h2 class="section-title">Development Process Flow</h2>
-                    <p class="slide-subtitle">Idea to production in the new process</p>
-
-                    <div style="background: white; padding: 40px; border-radius: 16px; margin-top: 30px;">
-                        <div class="flow-container" style="flex-direction: column; align-items: stretch;">
-                            <div class="flow-box">💡 Idea</div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">📋 FRD (Functional Requirements)</div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">🎨 Design by Design Team</div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box" style="background: #FEF3C7;">🎫 Jira Ticket Created → BACKLOG</div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box" style="background: #FEE2E2;">⚠️ CRITICAL GATE: All Stakeholder Review<br/><small>(Leads + Product + Design + All Relevant Parties)</small></div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box" style="background: #D1FAE5;">✅ Ticket Approved → Can Enter Sprint</div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">👨‍💻 Developer Assigned</div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box" style="background: #E0F2FE;">📊 Impact Analysis Document Uploaded<br/><small>(Senior Engineering Manager & Tech Lead Reviews & Approves)</small></div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">⚙️ Development Work</div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">🔍 Code Review</div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">✅ Final Code Review</div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">🧪 Staging Environment</div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">🤝 Handover to Product Owner</div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">🚀 Production Release</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 7: Ticket Readiness Gate -->
-        <div class="slide slide-white" data-slide="7">
-            <div style="position: relative;">
-                <div class="accent-bar"></div>
-                <div style="margin-left: 30px;">
-                    <h2 class="section-title">Ticket Readiness Gate</h2>
-                    <p class="slide-subtitle">The critical checkpoint before sprint entry</p>
-
-                    <div class="error-box">
-                        <h3>🚫 HARD RULE: No Incomplete Tickets in Sprint</h3>
-                        <p>If anything is missing in the ticket, it <strong>cannot</strong> be taken into the sprint. Period.</p>
-                    </div>
-
-                    <div class="two-col">
-                        <div class="card">
-                            <h3>✅ Ticket Must Have</h3>
-                            <ul style="list-style: none;">
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Complete FRD documented
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Final design approved by design team
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    All acceptance criteria clear
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Senior engineering manager & tech lead review completed
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Product owner sign-off
-                                </li>
-                                <li style="padding: 12px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    All stakeholder approvals
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="card">
-                            <h3>👥 Who Reviews Tickets</h3>
-                            <ul style="list-style: none;">
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0;">
-                                    <strong>Senior Engineering Manager & Tech Leads:</strong> Technical feasibility & approach
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0;">
-                                    <strong>Product Owner:</strong> Requirements & business value
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0;">
-                                    <strong>Design Team:</strong> UI/UX completeness
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0;">
-                                    <strong>QA Lead:</strong> Testability & acceptance criteria
-                                </li>
-                                <li style="padding: 12px 0;">
-                                    <strong>Other Stakeholders:</strong> Dependencies & integration
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="info-box" style="margin-top: 30px;">
-                        <h3>💡 Shared Responsibility</h3>
-                        <p>Both leads and all stakeholders are responsible for ticket correctness. Everyone must review and approve. Only properly vetted tickets can enter the sprint.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 8: Impact Analysis Document -->
-        <div class="slide slide-light" data-slide="8">
-            <div style="position: relative;">
-                <div class="accent-bar"></div>
-                <div style="margin-left: 30px;">
-                    <h2 class="section-title">Impact Analysis Document</h2>
-                    <p class="slide-subtitle">Developer's blueprint for implementation</p>
-
-                    <div class="info-box">
-                        <h3>📊 What is Impact Analysis?</h3>
-                        <p>A document uploaded by the developer to the Jira ticket that outlines exactly what they plan to do, which files will be changed, what the technical approach will be, and what the impact is on the system.</p>
-                    </div>
-
-                    <div class="two-col" style="margin-top: 30px;">
-                        <div class="card">
-                            <h3>Document Should Include</h3>
-                            <ul style="list-style: none;">
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Technical approach & architecture
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Files/modules to be modified
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Database changes (if any)
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    API endpoints affected
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Dependencies on other systems
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Estimated effort breakdown
-                                </li>
-                                <li style="padding: 12px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Potential risks & mitigation
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="card">
-                            <h3>Review Process</h3>
-                            <ul style="list-style: none;">
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0;">
-                                    <strong>1.</strong> Developer uploads impact analysis to ticket
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0;">
-                                    <strong>2.</strong> Tech lead/senior engineering manager reviews the approach
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0;">
-                                    <strong>3.</strong> Lead approves or requests changes
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0;">
-                                    <strong>4.</strong> Once approved, dev starts implementation
-                                </li>
-                                <li style="padding: 12px 0;">
-                                    <strong>5.</strong> Implementation must follow the approved plan
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="success-box" style="margin-top: 30px;">
-                        <h3>✅ Protection for Developers</h3>
-                        <p>The impact analysis creates a clear contract. Reviews can only happen if the developer deviated from the approved design or went beyond the impact analysis scope. If the developer followed the plan, the ticket is complete.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 9: Design Freeze Rule -->
-        <div class="slide slide-white" data-slide="9">
-            <div style="position: relative;">
-                <div class="accent-bar"></div>
-                <div style="margin-left: 30px;">
-                    <h2 class="section-title">Design Freeze Rule</h2>
-                    <p class="slide-subtitle">No mid-sprint design changes</p>
-
-                    <div class="error-box">
-                        <h3>🚫 ABSOLUTE RULE</h3>
-                        <p style="font-size: 20px; font-weight: 600; margin-top: 10px;">Once a sprint starts, design is FROZEN. No changes allowed.</p>
-                    </div>
-
-                    <div class="two-col" style="margin-top: 40px;">
-                        <div class="card" style="background: #FEE2E2;">
-                            <h3>❌ NOT Allowed Mid-Sprint</h3>
-                            <ul style="list-style: none;">
-                                <li style="padding: 12px 0; border-bottom: 1px solid #FCA5A5; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 20px;">✗</span>
-                                    "Let's change the button color"
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #FCA5A5; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 20px;">✗</span>
-                                    "Add this field to the form"
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #FCA5A5; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 20px;">✗</span>
-                                    "Let's move this section"
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #FCA5A5; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 20px;">✗</span>
-                                    "Can we use a different layout?"
-                                </li>
-                                <li style="padding: 12px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 20px;">✗</span>
-                                    "I just thought of a better flow"
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="card" style="background: #D1FAE5;">
-                            <h3>✅ What Happens Instead</h3>
-                            <ul style="list-style: none;">
-                                <li style="padding: 12px 0; border-bottom: 1px solid #86EFAC; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Design was reviewed before sprint
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #86EFAC; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Designer signed off on design
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #86EFAC; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Everyone adheres to approved design
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #86EFAC; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Developer follows design exactly
-                                </li>
-                                <li style="padding: 12px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    New ideas → Change Request or next sprint
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="info-box" style="margin-top: 30px;">
-                        <h3>📝 The Contract</h3>
-                        <p style="margin-bottom: 10px;">Design team reviewed their design before sprint start.</p>
-                        <p style="margin-bottom: 10px;">All stakeholders approved the design.</p>
-                        <p>Therefore, everyone must adhere to it. No exceptions.</p>
-                    </div>
-
-                    <div class="warning-box" style="margin-top: 20px;">
-                        <p><strong>⚠️ Exception:</strong> If there's a genuine usability issue or technical impossibility discovered during development, it must go through the formal Change Request process.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 10: Review Rules -->
-        <div class="slide slide-light" data-slide="10">
-            <div style="position: relative;">
-                <div class="accent-bar"></div>
-                <div style="margin-left: 30px;">
-                    <h2 class="section-title">Review Rules</h2>
-                    <p class="slide-subtitle">When reviews can and cannot happen</p>
-
-                    <div class="two-col">
-                        <div class="card" style="background: #D1FAE5; border-left: 6px solid var(--success);">
-                            <h3>✅ Reviews ARE Allowed For:</h3>
-                            <ul style="list-style: none;">
-                                <li style="padding: 15px 0; border-bottom: 1px solid #86EFAC; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 22px;">✓</span>
-                                    <strong>Design deviation:</strong> Developer didn't follow approved design
-                                </li>
-                                <li style="padding: 15px 0; border-bottom: 1px solid #86EFAC; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 22px;">✓</span>
-                                    <strong>Scope creep:</strong> Work beyond impact analysis
-                                </li>
-                                <li style="padding: 15px 0; border-bottom: 1px solid #86EFAC; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 22px;">✓</span>
-                                    <strong>Code quality issues:</strong> Standards not met
-                                </li>
-                                <li style="padding: 15px 0; border-bottom: 1px solid #86EFAC; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 22px;">✓</span>
-                                    <strong>Technical errors:</strong> Bugs, performance issues
-                                </li>
-                                <li style="padding: 15px 0; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 22px;">✓</span>
-                                    <strong>Security concerns:</strong> Vulnerabilities found
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="card" style="background: #FEE2E2; border-left: 6px solid var(--error);">
-                            <h3>❌ Reviews NOT Allowed For:</h3>
-                            <ul style="list-style: none;">
-                                <li style="padding: 15px 0; border-bottom: 1px solid #FCA5A5; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 22px;">✗</span>
-                                    <strong>"Not up to mark"</strong> without specifics
-                                </li>
-                                <li style="padding: 15px 0; border-bottom: 1px solid #FCA5A5; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 22px;">✗</span>
-                                    <strong>New requirements</strong> discovered mid-sprint
-                                </li>
-                                <li style="padding: 15px 0; border-bottom: 1px solid #FCA5A5; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 22px;">✗</span>
-                                    <strong>Design changes</strong> after freeze
-                                </li>
-                                <li style="padding: 15px 0; border-bottom: 1px solid #FCA5A5; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 22px;">✗</span>
-                                    <strong>Personal preferences</strong> on approved design
-                                </li>
-                                <li style="padding: 15px 0; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 22px;">✗</span>
-                                    <strong>Subjective opinions</strong> on completed work
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="success-box" style="margin-top: 30px;">
-                        <h3>🎯 The Standard</h3>
-                        <p style="font-size: 18px; line-height: 1.6;">If the developer followed the approved design and stayed within the impact analysis scope, the ticket is complete. Reviews should only address deviations, technical issues, or quality concerns — not subjective preferences or new ideas.</p>
-                    </div>
-
-                    <div class="info-box" style="margin-top: 20px;">
-                        <h3>💡 Senior Engineering Manager & Tech Lead Responsibility</h3>
-                        <p>Senior engineering manager & tech leads review impact analysis at the start. After approval, only deviations or technical problems warrant further review. This protects developer time and maintains sprint predictability.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 11: Change Request Process -->
-        <div class="slide slide-white" data-slide="11">
-            <div style="position: relative;">
-                <div class="accent-bar"></div>
-                <div style="margin-left: 30px;">
-                    <h2 class="section-title">Change Request Process</h2>
-                    <p class="slide-subtitle">How to handle mid-sprint requirement changes</p>
-
-                    <div class="warning-box">
-                        <h3>⚠️ When Requirements Change Mid-Sprint</h3>
-                        <p>If requirements that were frozen change during the sprint, this must be handled through a formal Change Request — it cannot just be added to the existing ticket.</p>
-                    </div>
-
-                    <div style="background: white; padding: 40px; border-radius: 16px; margin-top: 30px; border: 3px solid var(--warning);">
-                        <h3 style="text-align: center; margin-bottom: 30px; color: var(--navy); font-size: 28px;">Change Request Workflow</h3>
-                        <div class="flow-container" style="flex-direction: column; align-items: stretch;">
-                            <div class="flow-box" style="background: #FEF3C7;">⚠️ Requirement Change Identified</div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">📝 Change Request Created<br/><small>(Separate ticket/document)</small></div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">📊 Impact Assessment<br/><small>(Senior engineering manager & tech lead evaluate scope, time, risk)</small></div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">👥 Stakeholder Review<br/><small>(Product, Senior Engineering Manager & Tech Lead, relevant parties)</small></div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box" style="background: #E0F2FE;">🔍 Decision Point</div>
-                        </div>
-
-                        <div class="two-col" style="margin-top: 30px;">
-                            <div style="background: #D1FAE5; padding: 20px; border-radius: 12px; text-align: center;">
-                                <h4 style="margin-bottom: 10px; color: var(--success);">✅ Approved</h4>
-                                <p>Goes to next sprint planning</p>
-                            </div>
-                            <div style="background: #FEE2E2; padding: 20px; border-radius: 12px; text-align: center;">
-                                <h4 style="margin-bottom: 10px; color: var(--error);">❌ Rejected</h4>
-                                <p>Change documented for future consideration</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="info-box" style="margin-top: 30px;">
-                        <h3>🔑 Key Points</h3>
-                        <p style="margin-bottom: 10px;">• Original ticket continues with original requirements</p>
-                        <p style="margin-bottom: 10px;">• Change request is a separate entity</p>
-                        <p style="margin-bottom: 10px;">• Current sprint commitment is protected</p>
-                        <p>• Changes are planned properly for future sprints</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 12: Production Bug Handling -->
-        <div class="slide slide-light" data-slide="12">
-            <div style="position: relative;">
-                <div class="accent-bar"></div>
-                <div style="margin-left: 30px;">
-                    <h2 class="section-title">Production Bug Handling</h2>
-                    <p class="slide-subtitle">Priority interrupt for critical issues</p>
-
-                    <div class="error-box">
-                        <h3>🚨 Production Bugs Take Priority</h3>
-                        <p style="font-size: 18px; margin-top: 10px;">When a production bug occurs, it gets immediate attention and can interrupt current sprint work.</p>
-                    </div>
-
-                    <div style="background: white; padding: 40px; border-radius: 16px; margin-top: 30px;">
-                        <h3 style="text-align: center; margin-bottom: 30px; color: var(--navy); font-size: 26px;">Bug Handling Process</h3>
-                        <div class="flow-container" style="flex-direction: column; align-items: stretch;">
-                            <div class="flow-box" style="background: #FEE2E2;">🐛 Production Bug Identified</div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">🔴 Priority Assessment<br/><small>(P0/P1/P2/P3)</small></div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box" style="background: #FEF3C7;">⏸️ Pause Non-Priority Ticket<br/><small>(Drop the ticket that's not at priority)</small></div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">🔧 Developer Assigned to Bug</div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">🛠️ Bug Resolution<br/><small>(Fix, test, deploy)</small></div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box" style="background: #D1FAE5;">✅ Bug Resolved & Deployed</div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">📋 Return to Paused Ticket<br/><small>(Can be taken in next sprint if needed)</small></div>
-                        </div>
-                    </div>
-
-                    <div class="two-col" style="margin-top: 40px;">
-                        <div class="card">
-                            <h3>When to Drop Current Work</h3>
-                            <ul style="list-style: none;">
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0;">
-                                    <strong>P0 (Critical):</strong> Always interrupt immediately
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0;">
-                                    <strong>P1 (High):</strong> Interrupt if affecting users
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0;">
-                                    <strong>P2 (Medium):</strong> Evaluate with senior engineering manager & tech lead
-                                </li>
-                                <li style="padding: 12px 0;">
-                                    <strong>P3 (Low):</strong> Queue for next available slot
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="card">
-                            <h3>Paused Ticket Handling</h3>
-                            <ul style="list-style: none;">
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Document current progress
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Commit work in progress
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Mark as "paused for prod bug"
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Can resume in next sprint
-                                </li>
-                                <li style="padding: 12px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    No penalty for sprint miss
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="success-box" style="margin-top: 30px;">
-                        <h3>✅ Developer Protection</h3>
-                        <p>If a ticket was dropped for a production bug, this is documented and understood. The developer can pick up the paused ticket in the next sprint with no negative impact on their performance metrics.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 13: Bug Reporting Process -->
-        <div class="slide slide-white" data-slide="13">
-            <div style="position: relative;">
-                <div class="accent-bar"></div>
-                <div style="margin-left: 30px;">
-                    <h2 class="section-title">Bug Reporting Process</h2>
-                    <p class="slide-subtitle">How bugs are reported and validated</p>
-
-                    <div style="background: white; padding: 40px; border-radius: 16px; margin-top: 30px; border: 3px solid var(--error);">
-                        <h3 style="text-align: center; margin-bottom: 30px; color: var(--navy); font-size: 28px;">Bug Lifecycle</h3>
-                        <div class="flow-container" style="flex-direction: column; align-items: stretch;">
-                            <div class="flow-box" style="background: #FEE2E2;">🐛 Bug Discovered</div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">📝 Product Team Reports in Jira<br/><small>(Complete description, steps to reproduce, expected vs actual behavior)</small></div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">👨‍💻 Developer Assigned for Analysis</div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box" style="background: #E0F2FE;">🔍 Developer Investigation<br/><small>(Reproduce, analyze root cause, verify if it's actually a bug)</small></div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box" style="background: #FEF3C7;">⚖️ DECISION POINT</div>
-                        </div>
-
-                        <div class="two-col" style="margin-top: 30px;">
-                            <div style="background: #FEE2E2; padding: 25px; border-radius: 12px; border-left: 6px solid var(--error);">
-                                <h4 style="margin-bottom: 15px; color: var(--error); font-size: 22px;">✅ Confirmed Bug</h4>
-                                <ul style="list-style: none;">
-                                    <li style="padding: 10px 0; border-bottom: 1px solid #FCA5A5; padding-left: 30px; position: relative;">
-                                        <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 20px;">•</span>
-                                        Developer adds findings/comments
-                                    </li>
-                                    <li style="padding: 10px 0; border-bottom: 1px solid #FCA5A5; padding-left: 30px; position: relative;">
-                                        <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 20px;">•</span>
-                                        Marks as "Confirmed Bug"
-                                    </li>
-                                    <li style="padding: 10px 0; border-bottom: 1px solid #FCA5A5; padding-left: 30px; position: relative;">
-                                        <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 20px;">•</span>
-                                        Priority assigned (P0/P1/P2/P3)
-                                    </li>
-                                    <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                        <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 20px;">•</span>
-                                        Ticket enters sprint cycle as per priority
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div style="background: #D1FAE5; padding: 25px; border-radius: 12px; border-left: 6px solid var(--success);">
-                                <h4 style="margin-bottom: 15px; color: var(--success); font-size: 22px;">❌ Not a Bug</h4>
-                                <ul style="list-style: none;">
-                                    <li style="padding: 10px 0; border-bottom: 1px solid #86EFAC; padding-left: 30px; position: relative;">
-                                        <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">•</span>
-                                        Developer explains why it's not a bug
-                                    </li>
-                                    <li style="padding: 10px 0; border-bottom: 1px solid #86EFAC; padding-left: 30px; position: relative;">
-                                        <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">•</span>
-                                        Could be: feature request, expected behavior, user error, env issue
-                                    </li>
-                                    <li style="padding: 10px 0; border-bottom: 1px solid #86EFAC; padding-left: 30px; position: relative;">
-                                        <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">•</span>
-                                        Marks as "Not a Bug"
-                                    </li>
-                                    <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                        <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">•</span>
-                                        Ticket closed or converted to feature request
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="info-box" style="margin-top: 30px;">
-                        <h3>🔑 Critical Rules</h3>
-                        <p style="margin-bottom: 10px;">• Product team reports bugs in Jira with complete details</p>
-                        <p style="margin-bottom: 10px;">• Developer must analyze and comment findings before any action</p>
-                        <p style="margin-bottom: 10px;">• Only after developer comments can the ticket move to sprint cycle</p>
-                        <p>• Priority determines when the bug enters sprint (P0 immediate, P3 can wait)</p>
-                    </div>
-
-                    <div class="two-col" style="margin-top: 30px;">
-                        <div class="card">
-                            <h3>📋 Required in Bug Report</h3>
-                            <ul style="list-style: none;">
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Clear description of the issue
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Steps to reproduce
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Expected behavior
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Actual behavior
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Environment details
-                                </li>
-                                <li style="padding: 12px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Screenshots/videos if applicable
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="card">
-                            <h3>🔍 Developer Analysis Should Include</h3>
-                            <ul style="list-style: none;">
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Reproduction confirmation
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Root cause analysis
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Bug/Not a bug determination
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Explanation of findings
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Estimated effort (if bug)
-                                </li>
-                                <li style="padding: 12px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Impact assessment (if bug)
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 14: Sprint Commitment & Velocity -->
-        <div class="slide slide-white" data-slide="14">
-            <div style="position: relative;">
-                <div class="accent-bar"></div>
-                <div style="margin-left: 30px;">
-                    <h2 class="section-title">Sprint Commitment & Velocity</h2>
-                    <p class="slide-subtitle">Predictable delivery through stable process</p>
-
-                    <div class="info-box">
-                        <h3>🎯 How the New Process Improves Velocity</h3>
-                        <p>By eliminating mid-sprint surprises, the team can actually commit to work and deliver consistently.</p>
-                    </div>
-
-                    <div class="two-col" style="margin-top: 40px;">
-                        <div class="card" style="background: #FEE2E2;">
-                            <h3>❌ Old Process Issues</h3>
-                            <ul style="list-style: none;">
-                                <li style="padding: 15px 0; border-bottom: 1px solid #FCA5A5; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 22px;">✗</span>
-                                    Unpredictable velocity
-                                </li>
-                                <li style="padding: 15px 0; border-bottom: 1px solid #FCA5A5; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 22px;">✗</span>
-                                    Constant rework cycles
-                                </li>
-                                <li style="padding: 15px 0; border-bottom: 1px solid #FCA5A5; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 22px;">✗</span>
-                                    Developer burnout
-                                </li>
-                                <li style="padding: 15px 0; border-bottom: 1px solid #FCA5A5; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 22px;">✗</span>
-                                    Low morale from "never done"
-                                </li>
-                                <li style="padding: 15px 0; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 22px;">✗</span>
-                                    Unable to plan releases
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="card" style="background: #D1FAE5;">
-                            <h3>✅ New Process Benefits</h3>
-                            <ul style="list-style: none;">
-                                <li style="padding: 15px 0; border-bottom: 1px solid #86EFAC; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 22px;">✓</span>
-                                    Consistent velocity
-                                </li>
-                                <li style="padding: 15px 0; border-bottom: 1px solid #86EFAC; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 22px;">✓</span>
-                                    Work done right first time
-                                </li>
-                                <li style="padding: 15px 0; border-bottom: 1px solid #86EFAC; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 22px;">✓</span>
-                                    Sustainable pace
-                                </li>
-                                <li style="padding: 15px 0; border-bottom: 1px solid #86EFAC; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 22px;">✓</span>
-                                    High team confidence
-                                </li>
-                                <li style="padding: 15px 0; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 22px;">✓</span>
-                                    Predictable releases
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="three-col" style="margin-top: 40px;">
-                        <div class="card" style="text-align: center;">
-                            <h3 style="font-size: 48px; margin-bottom: 10px;">📊</h3>
-                            <h3>Stable Velocity</h3>
-                            <p style="color: var(--medium-gray); margin-top: 10px;">Team can predict capacity sprint to sprint</p>
-                        </div>
-
-                        <div class="card" style="text-align: center;">
-                            <h3 style="font-size: 48px; margin-bottom: 10px;">🎯</h3>
-                            <h3>Clear Goals</h3>
-                            <p style="color: var(--medium-gray); margin-top: 10px;">Everyone knows what "done" means</p>
-                        </div>
-
-                        <div class="card" style="text-align: center;">
-                            <h3 style="font-size: 48px; margin-bottom: 10px;">🚀</h3>
-                            <h3>Faster Overall</h3>
-                            <p style="color: var(--medium-gray); margin-top: 10px;">Less rework = more features delivered</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 15: Priority Ticket Management -->
-        <div class="slide slide-light" data-slide="15">
-            <div style="position: relative;">
-                <div class="accent-bar"></div>
-                <div style="margin-left: 30px;">
-                    <h2 class="section-title">Priority Ticket Management</h2>
-                    <p class="slide-subtitle">Handling urgent tickets during an active sprint</p>
-
-                    <div class="warning-box">
-                        <h3>⚡ When High Priority Tickets Arrive Mid-Sprint</h3>
-                        <p style="font-size: 18px; margin-top: 10px;">Sometimes critical priority tickets need to be taken up in the current sprint. When this happens, sprint capacity must be managed by moving lower-priority tickets to the next sprint.</p>
-                    </div>
-
-                    <div style="background: white; padding: 40px; border-radius: 16px; margin-top: 30px; border: 3px solid var(--warning);">
-                        <h3 style="text-align: center; margin-bottom: 30px; color: var(--navy); font-size: 28px;">Priority Ticket Insertion Process</h3>
-                        <div class="flow-container" style="flex-direction: column; align-items: stretch;">
-                            <div class="flow-box" style="background: #FEE2E2;">🚨 High Priority Ticket Identified<br/><small>(P0 or P1 that can't wait for next sprint)</small></div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">📊 Assess Current Sprint Capacity<br/><small>(Senior engineering manager & tech lead + team evaluate available bandwidth)</small></div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box" style="background: #FEF3C7;">🎯 Identify Ticket(s) to Move Out<br/><small>(Select lower priority tickets from current sprint)</small></div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">🤝 Stakeholder Communication<br/><small>(Inform product owner & affected parties)</small></div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box">📋 Move Lower Priority Ticket(s) to Next Sprint<br/><small>(Update Jira, adjust sprint planning)</small></div>
-                            <div class="flow-arrow" style="text-align: center;">↓</div>
-                            <div class="flow-box" style="background: #D1FAE5;">✅ Add Priority Ticket to Current Sprint<br/><small>(Begin work immediately)</small></div>
-                        </div>
-                    </div>
-
-                    <div class="two-col" style="margin-top: 40px;">
-                        <div class="card">
-                            <h3>📝 Selection Criteria for Moving Tickets</h3>
-                            <ul style="list-style: none;">
-                                <li style="padding: 15px 0; border-bottom: 1px solid #E2E8F0; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">1</span>
-                                    <strong>Lowest business priority</strong> in current sprint
-                                </li>
-                                <li style="padding: 15px 0; border-bottom: 1px solid #E2E8F0; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">2</span>
-                                    <strong>Least dependencies</strong> on other tickets
-                                </li>
-                                <li style="padding: 15px 0; border-bottom: 1px solid #E2E8F0; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">3</span>
-                                    <strong>Tickets not yet started</strong> or in early stages
-                                </li>
-                                <li style="padding: 15px 0; border-bottom: 1px solid #E2E8F0; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">4</span>
-                                    <strong>Similar effort estimate</strong> to incoming priority ticket
-                                </li>
-                                <li style="padding: 15px 0; padding-left: 35px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">5</span>
-                                    <strong>No hard deadlines</strong> in current sprint
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="card">
-                            <h3>✅ Required Steps</h3>
-                            <ul style="list-style: none;">
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Senior engineering manager & tech lead approve the swap
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Product owner is informed
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Sprint board updated in Jira
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Team notified in standup/Slack
-                                </li>
-                                <li style="padding: 12px 0; border-bottom: 1px solid #E2E8F0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Moved ticket added to next sprint backlog
-                                </li>
-                                <li style="padding: 12px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Documented in sprint notes
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="info-box" style="margin-top: 30px;">
-                        <h3>💡 Key Principles</h3>
-                        <p style="margin-bottom: 10px;">• Sprint capacity should remain constant - if something comes in, something must go out</p>
-                        <p style="margin-bottom: 10px;">• Never overload the team - maintain sustainable pace</p>
-                        <p style="margin-bottom: 10px;">• Clear communication with all stakeholders is mandatory</p>
-                        <p>• Moved tickets are guaranteed a spot in next sprint planning</p>
-                    </div>
-
-                    <div class="two-col" style="margin-top: 30px;">
-                        <div style="background: #FEE2E2; padding: 25px; border-radius: 12px; border-left: 6px solid var(--error);">
-                            <h4 style="margin-bottom: 15px; color: var(--error); font-size: 22px;">❌ Don't Do This</h4>
-                            <ul style="list-style: none;">
-                                <li style="padding: 10px 0; border-bottom: 1px solid #FCA5A5; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 20px;">✗</span>
-                                    Add priority ticket without removing others
-                                </li>
-                                <li style="padding: 10px 0; border-bottom: 1px solid #FCA5A5; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 20px;">✗</span>
-                                    Remove tickets without stakeholder notification
-                                </li>
-                                <li style="padding: 10px 0; border-bottom: 1px solid #FCA5A5; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 20px;">✗</span>
-                                    Expect team to "just work harder"
-                                </li>
-                                <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 20px;">✗</span>
-                                    Pull out tickets that are 80%+ complete
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div style="background: #D1FAE5; padding: 25px; border-radius: 12px; border-left: 6px solid var(--success);">
-                            <h4 style="margin-bottom: 15px; color: var(--success); font-size: 22px;">✅ Do This Instead</h4>
-                            <ul style="list-style: none;">
-                                <li style="padding: 10px 0; border-bottom: 1px solid #86EFAC; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Maintain constant sprint capacity
-                                </li>
-                                <li style="padding: 10px 0; border-bottom: 1px solid #86EFAC; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Communicate proactively with all parties
-                                </li>
-                                <li style="padding: 10px 0; border-bottom: 1px solid #86EFAC; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Document the swap decision and rationale
-                                </li>
-                                <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Protect nearly-complete work from removal
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 16: Communication & Escalation -->
-        <div class="slide slide-light" data-slide="16">
-            <div style="position: relative;">
-                <div class="accent-bar"></div>
-                <div style="margin-left: 30px;">
-                    <h2 class="section-title">Communication Channels</h2>
-                    <p class="slide-subtitle">Right channel for right urgency</p>
-
-                    <div class="severity-grid">
-                        <div class="severity-card p0-card">
-                            <h3>P0 Critical</h3>
-                            <p><strong>Phone Call</strong></p>
-                            <p>+ War Room</p>
-                            <p>+ Incident Channel</p>
-                            <div class="time">No async allowed</div>
-                        </div>
-
-                        <div class="severity-card p1-card">
-                            <h3>P1 High</h3>
-                            <p><strong>Direct Message</strong></p>
-                            <p>+ @mention in Slack</p>
-                            <p>+ Email to leads</p>
-                            <div class="time">Response < 1 hour</div>
-                        </div>
-
-                        <div class="severity-card p2-card">
-                            <h3>P2 Medium</h3>
-                            <p><strong>Team Channel</strong></p>
-                            <p>+ Ticket Assignment</p>
-                            <p>+ Daily Standup</p>
-                            <div class="time">Response < 4 hours</div>
-                        </div>
-
-                        <div class="severity-card p3-card">
-                            <h3>P3 Low</h3>
-                            <p><strong>Ticket System</strong></p>
-                            <p>+ Sprint Planning</p>
-                            <p>+ Backlog Review</p>
-                            <div class="time">Response < 1 day</div>
-                        </div>
-                    </div>
-
-                    <div class="two-col" style="margin-top: 40px;">
-                        <div class="card">
-                            <h3>📢 Regular Ceremonies</h3>
-                            <ul>
-                                <li><strong>Daily Standup (DSM):</strong> 15 min, progress, blockers & bug triage</li>
-                                <li><strong>Sprint Planning:</strong> Wednesday, 1 hour</li>
-                                <li><strong>Sprint Retrospective:</strong> Tuesday, 45 min</li>
-                                <li><strong>Grooming Session:</strong> Monday, 1 hour</li>
-                            </ul>
-                        </div>
-
-                        <div class="card">
-                            <h3>⚡ When to Escalate</h3>
-                            <ul>
-                                <li>Blocked for more than 4 hours (P0/P1) or 1 day (P2)</li>
-                                <li>Need architectural decision or major design change</li>
-                                <li>Requires additional resources or budget</li>
-                                <li>Impacts other teams or external dependencies</li>
-                                <li>Sprint commitment at risk</li>
-                                <li>Scope creep or requirement changes mid-sprint</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="warning-box" style="margin-top: 30px;">
-                        <p>⚠️ Escalate early, not late. Don't wait until the problem becomes critical.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 17: Why This Works -->
-        <div class="slide slide-white" data-slide="17">
-            <div style="position: relative;">
-                <div class="accent-bar"></div>
-                <div style="margin-left: 30px;">
-                    <h2 class="section-title">Why This Works</h2>
-                    <p class="slide-subtitle">Key design principles</p>
-
-                    <div class="three-col">
-                        <div class="card">
-                            <h3 style="text-align: center; font-size: 48px; margin: 20px 0;">🎯</h3>
-                            <h3 style="text-align: center;">Clear Ownership</h3>
-                            <p style="text-align: center; color: var(--medium-gray);">Every role has defined responsibilities with no overlap or ambiguity</p>
-                        </div>
-
-                        <div class="card">
-                            <h3 style="text-align: center; font-size: 48px; margin: 20px 0;">🔒</h3>
-                            <h3 style="text-align: center;">Scope Stability</h3>
-                            <p style="text-align: center; color: var(--medium-gray);">No mid-sprint surprises or feature injections</p>
-                        </div>
-
-                        <div class="card">
-                            <h3 style="text-align: center; font-size: 48px; margin: 20px 0;">📋</h3>
-                            <h3 style="text-align: center;">Impact Analysis</h3>
-                            <p style="text-align: center; color: var(--medium-gray);">Clear contract on what will be built and how</p>
-                        </div>
-
-                        <div class="card">
-                            <h3 style="text-align: center; font-size: 48px; margin: 20px 0;">✅</h3>
-                            <h3 style="text-align: center;">Upfront Validation</h3>
-                            <p style="text-align: center; color: var(--medium-gray);">All stakeholders review before work begins</p>
-                        </div>
-
-                        <div class="card">
-                            <h3 style="text-align: center; font-size: 48px; margin: 20px 0;">🛡️</h3>
-                            <h3 style="text-align: center;">Developer Protection</h3>
-                            <p style="text-align: center; color: var(--medium-gray);">Following approved plan = ticket complete</p>
-                        </div>
-
-                        <div class="card">
-                            <h3 style="text-align: center; font-size: 48px; margin: 20px 0;">🔄</h3>
-                            <h3 style="text-align: center;">Formal Changes</h3>
-                            <p style="text-align: center; color: var(--medium-gray);">Change requests keep sprints predictable</p>
-                        </div>
-                    </div>
-
-                    <div class="info-box" style="margin-top: 40px;">
-                        <h3>The Result</h3>
-                        <p>This framework creates <strong>predictable delivery</strong>, <strong>high code quality</strong>, and <strong>sustainable team health</strong>. By freezing scope, enforcing upfront validation, and protecting developer time, we build software that lasts and teams that thrive.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 18: Summary - Key Takeaways -->
-        <div class="slide slide-light" data-slide="18">
-            <div style="position: relative;">
-                <div class="accent-bar"></div>
-                <div style="margin-left: 30px;">
-                    <h2 class="section-title">Key Takeaways</h2>
-                    <p class="slide-subtitle">Remember these core principles</p>
-
-                    <div class="two-col">
-                        <div class="success-box">
-                            <h3>✅ Before Sprint Starts</h3>
-                            <ul style="list-style: none; margin-top: 15px;">
-                                <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    All stakeholders review ticket
-                                </li>
-                                <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Design is final and frozen
-                                </li>
-                                <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    Requirements are complete
-                                </li>
-                                <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 20px;">✓</span>
-                                    All questions answered
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="info-box">
-                            <h3>📊 During Sprint</h3>
-                            <ul style="list-style: none; margin-top: 15px;">
-                                <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Developer uploads impact analysis
-                                </li>
-                                <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Tech lead/senior engineering manager reviews and approves
-                                </li>
-                                <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    Developer follows approved plan
-                                </li>
-                                <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--teal); font-weight: 700; font-size: 20px;">•</span>
-                                    No design or requirement changes
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="two-col" style="margin-top: 30px;">
-                        <div class="warning-box">
-                            <h3>⚠️ If Changes Needed</h3>
-                            <ul style="list-style: none; margin-top: 15px;">
-                                <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--warning); font-weight: 700; font-size: 20px;">!</span>
-                                    Create formal change request
-                                </li>
-                                <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--warning); font-weight: 700; font-size: 20px;">!</span>
-                                    Impact analysis required
-                                </li>
-                                <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--warning); font-weight: 700; font-size: 20px;">!</span>
-                                    Plan for next sprint
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="error-box">
-                            <h3>🐛 If Production Bug</h3>
-                            <ul style="list-style: none; margin-top: 15px;">
-                                <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 20px;">!</span>
-                                    Pause non-priority ticket
-                                </li>
-                                <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 20px;">!</span>
-                                    Resolve bug immediately
-                                </li>
-                                <li style="padding: 10px 0; padding-left: 30px; position: relative;">
-                                    <span style="position: absolute; left: 0; color: var(--error); font-weight: 700; font-size: 20px;">!</span>
-                                    Resume or move to next sprint
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="success-box" style="margin-top: 30px; background: var(--teal); color: white;">
-                        <h3 style="color: white; font-size: 24px;">🎯 Bottom Line</h3>
-                        <p style="font-size: 18px; margin-top: 10px;">The process protects everyone: stakeholders get what they expect, developers have clear goals, and the team delivers consistently. Following these rules creates sustainable, predictable software delivery.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 19: Final - Remember -->
-        <div class="slide slide-dark" data-slide="19">
-            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                <h2 style="font-size: 48px; margin-bottom: 60px; text-align: center;">Remember</h2>
-                <div class="golden-rule" style="margin-bottom: 40px;">
-                    <h2 style="font-size: 52px;">Quality enables velocity,<br/>not the other way around.</h2>
-                </div>
-                <div class="golden-rule" style="background: rgba(8, 145, 178, 0.2); box-shadow: none; border: 3px solid var(--teal);">
-                    <h2 style="font-size: 44px; color: var(--ice-blue);">Frozen scope.<br/>Clear contracts.<br/>Predictable delivery.</h2>
-                </div>
-                <p style="margin-top: 60px; font-size: 24px; opacity: 0.8; text-align: center; max-width: 900px;">
-                    Let's build great software with clear processes, strong standards,<br/>and a commitment to excellence.
-                </p>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <div class="nav-controls" id="navControls">
-        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">←</button>
-        <span class="slide-counter" id="slideCounter">1 / 19</span>
-        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">→</button>
+    <!-- Slide 2: Current Issues -->
+    <div class="slide">
+      <h2>⚠️ Current Challenges</h2>
+      <div class="content">
+        <h3>Critical Issues Without Agile System:</h3>
+        <ul>
+          <li><strong>Overburden & Heroic Culture:</strong> Teams overwhelmed, relying on individual heroics instead of sustainable processes</li>
+          <li><strong>No Collaborative Environment:</strong> Siloed work culture, teams operating in isolation</li>
+          <li><strong>Zero Cross-Team Visibility:</strong> One team has no idea what other teams are doing</li>
+          <li><strong>Lack of Proper Planning:</strong> Reactive instead of proactive approach</li>
+          <li><strong>Micromanagement Overhead:</strong> Daily task assignment required, updates needed every 4 hours</li>
+          <li><strong>Manager Dependency:</strong> Constant supervision needed to track progress</li>
+          <li><strong>No Independent Work Culture:</strong> Team cannot self-organize or take ownership</li>
+        </ul>
+        <div class="highlight-box">
+          <strong>Result:</strong> Burnout, inefficiency, delays, and frustrated teams
+        </div>
+      </div>
     </div>
 
-    <script>
-        let currentSlide = 1;
-        const totalSlides = 19;
+    <!-- Slide 3: What is Agile -->
+    <div class="slide">
+      <h2>🎯 What is Agile?</h2>
+      <div class="content">
+        <div class="two-column">
+          <div class="box">
+            <h4>Agile Philosophy</h4>
+            <p>Iterative approach to project management and software development that helps teams deliver value faster with fewer headaches.</p>
+            <ul style="margin-top: 15px;">
+              <li>Break work into small chunks</li>
+              <li>Regular feedback loops</li>
+              <li>Continuous improvement</li>
+              <li>Team collaboration over processes</li>
+            </ul>
+          </div>
+          <div class="box">
+            <h4>What is a Sprint?</h4>
+            <p>A time-boxed period (2 weeks for us) where teams commit to completing specific work.</p>
+            <ul style="margin-top: 15px;">
+              <li>Fixed duration cycle</li>
+              <li>Clear goals and commitments</li>
+              <li>Working deliverables at end</li>
+              <li>Review and adapt process</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        function updateSlide() {
-            const slides = document.querySelectorAll('.slide');
-            slides.forEach((slide, index) => {
-                slide.classList.remove('active', 'prev');
-                const slideNum = index + 1;
-                if (slideNum === currentSlide) {
-                    slide.classList.add('active');
-                } else if (slideNum < currentSlide) {
-                    slide.classList.add('prev');
-                }
-            });
+    <!-- Slide 4: Hierarchy -->
+    <div class="slide">
+      <h2>📊 Agile Hierarchy</h2>
+      <div class="content">
+        <div class="hierarchy">
+          <div class="hierarchy-item">
+            <h4>🎪 EPIC</h4>
+            <p><strong>Large body of work</strong> that can be broken down into smaller pieces</p>
+            <p style="margin-top: 10px;"><em>Example: "Build New Payment System"</em></p>
+          </div>
+          
+          <div class="hierarchy-item">
+            <h4>⚡ FEATURE</h4>
+            <p><strong>Specific functionality</strong> that delivers value to users</p>
+            <p style="margin-top: 10px;"><em>Example: "Credit Card Payment Integration"</em></p>
+          </div>
+          
+          <div class="hierarchy-item">
+            <h4>📝 USER STORY</h4>
+            <p><strong>Small unit of work</strong> from user's perspective</p>
+            <p style="margin-top: 10px;"><em>Format: "As a [user], I want [goal] so that [benefit]"</em></p>
+            <p style="margin-top: 10px;"><em>Example: "As a customer, I want to save my card details so that checkout is faster next time"</em></p>
+          </div>
+          
+          <div class="hierarchy-item">
+            <h4>✅ TASK</h4>
+            <p><strong>Specific action</strong> needed to complete a story</p>
+            <p style="margin-top: 10px;"><em>Example: "Create database schema for card storage", "Implement encryption"</em></p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-            document.getElementById('slideCounter').textContent = `${currentSlide} / ${totalSlides}`;
-            document.getElementById('prevBtn').disabled = currentSlide === 1;
-            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+    <!-- Slide 5: 2-Week Sprint Ceremonies -->
+    <div class="slide">
+      <h2>📅 2-Week Sprint Ceremonies</h2>
+      <div class="content">
+        <div class="ceremony-grid">
+          <div class="ceremony-card">
+            <h4>🎯 Sprint Planning</h4>
+            <p><strong>When:</strong> Day 1 of sprint</p>
+            <p><strong>Duration:</strong> 2-4 hours</p>
+            <p><strong>Purpose:</strong> Team commits to work for the sprint, defines sprint goal, estimates story points</p>
+          </div>
+          
+          <div class="ceremony-card">
+            <h4>☀️ Daily Standup</h4>
+            <p><strong>When:</strong> Every day @ 9:30 AM</p>
+            <p><strong>Duration:</strong> 15 minutes</p>
+            <p><strong>Purpose:</strong> What I did, what I'll do, any blockers. Quick sync, not problem-solving</p>
+          </div>
+          
+          <div class="ceremony-card">
+            <h4>🎨 Sprint Review</h4>
+            <p><strong>When:</strong> Last day of sprint</p>
+            <p><strong>Duration:</strong> 1-2 hours</p>
+            <p><strong>Purpose:</strong> Demo completed work to stakeholders, gather feedback, celebrate wins</p>
+          </div>
+          
+          <div class="ceremony-card">
+            <h4>🔄 Sprint Retrospective</h4>
+            <p><strong>When:</strong> After Sprint Review</p>
+            <p><strong>Duration:</strong> 1 hour</p>
+            <p><strong>Purpose:</strong> What went well, what didn't, action items for improvement</p>
+          </div>
+        </div>
+        
+        <div class="highlight-box" style="margin-top: 30px;">
+          <strong>Grooming/Refinement:</strong> Mid-sprint session to prepare upcoming work, clarify requirements, estimate stories
+        </div>
+      </div>
+    </div>
 
-            const progress = (currentSlide / totalSlides) * 100;
-            document.getElementById('progressBar').style.width = progress + '%';
-        }
+    <!-- Slide 6: New Workflow Overview -->
+    <div class="slide">
+      <h2>🔄 New Workflow: Idea to Delivery</h2>
+      <div class="content">
+        <div class="flow-stage">
+          <h4>1️⃣ Idea Sources → JIRA</h4>
+          <p><strong>Sources:</strong> Sales/CRMs, Marketing/Ahref, Internal Ideas, Bugs</p>
+          <p>→ All ideas flow into Product Spaces (Product, AI, Design, Tech, Data)</p>
+        </div>
+        
+        <div class="flow-stage">
+          <h4>2️⃣ Feasibility & PRD Creation</h4>
+          <p><strong>Backlog:</strong> Tech Feasibility Check → Feature/Module → Draft PRD</p>
+          <p><strong>Decision Gates:</strong> Design Review (Approved/Rejected) → PRD Finalization</p>
+        </div>
+        
+        <div class="flow-stage">
+          <h4>3️⃣ Development Cycle</h4>
+          <p><strong>Daily Standup:</strong> 9:30 AM - 6:00 PM working window</p>
+          <p><strong>Requirement Grooming:</strong> Tech + Product + AI + Design alignment</p>
+          <p><strong>Tech Feasibility:</strong> Final approval/rejection decision point</p>
+        </div>
+        
+        <div class="flow-stage">
+          <h4>4️⃣ Execution & Quality Gates</h4>
+          <p><strong>Sprint Stages:</strong> Task Space (Assigned → Completed) → Tech Space (In Progress → Done)</p>
+          <p><strong>If Rejected:</strong> Dropped/Iteration path available</p>
+        </div>
+        
+        <div class="flow-stage">
+          <h4>5️⃣ Internal Ideas & Bug Tracking</h4>
+          <p><strong>Parsing:</strong> OK → Prioritization → Backlog (Feature/Module)</p>
+          <p><strong>Analysis:</strong> Ready & Bug? → AI/Tech resolution → Tech Space</p>
+          <p><strong>Not OK:</strong> Dropped immediately</p>
+        </div>
+      </div>
+    </div>
 
-        function changeSlide(direction) {
-            const newSlide = currentSlide + direction;
-            if (newSlide >= 1 && newSlide <= totalSlides) {
-                currentSlide = newSlide;
-                updateSlide();
-            }
-        }
+    <!-- Slide 7: Tech-JIRA Workflow -->
+    <div class="slide">
+      <h2>🎫 Tech-JIRA: Ticket Lifecycle</h2>
+      <div class="content">
+        <h3>Story Points System:</h3>
+        <ul>
+          <li><strong>1 SP = 1 Day</strong></li>
+          <li><strong>Max 2 SP</strong> on a single ticket</li>
+          <li><strong>1 SP for Dev</strong> = 0.6 for Dev + 0.2 for Misc (Review + Analysis)</li>
+          <li><strong>1 SP for Dev</strong> = 0.8 for Planning & Agent + 0.2 for Dev</li>
+          <li><strong>Set SP counts as buffer</strong> (2 days from each team working)</li>
+          <li><strong>1 Extra SP</strong> for buffers (change requests, misc)</li>
+        </ul>
+        
+        <h3 style="margin-top: 30px;">Ticket Journey:</h3>
+        <div class="flow-stage">
+          <p><strong>1. Ticket Created (Backlog)</strong> → Sprint Assigning</p>
+          <p><strong>2. Sprint Assigned</strong> → Ticket Splitting</p>
+          <p><strong>3. Ticket Assigned</strong> → Sprint Analysis (By Dev)</p>
+          <p><strong>4. Dev Completion</strong> → Code Review Stage</p>
+        </div>
+        
+        <p class="note"><strong>Standards:</strong> Unit Tests, Doc Strings, Other coding standards mandatory</p>
+      </div>
+    </div>
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') {
-                changeSlide(-1);
-            } else if (e.key === 'ArrowRight') {
-                changeSlide(1);
-            }
-        });
+    <!-- Slide 8: Review Process -->
+    <div class="slide">
+      <h2>🔍 Quality Review Process</h2>
+      <div class="content">
+        <h3>Three-Tier Review System:</h3>
+        <div class="review-types">
+          <h4>Tier 1: Code Reviews</h4>
+          <p><strong>Peer Review</strong> → Changes Required loop or proceed</p>
+          <p><strong>Lead Review</strong> → Changes Required loop or proceed</p>
+          <p><strong>Staging Released</strong> → Functionality Test</p>
+        </div>
+        
+        <div class="review-types" style="margin-top: 25px;">
+          <h4>Tier 2: Functional Reviews</h4>
+          <p><strong>PO Review</strong> → Validates business requirements</p>
+          <p><strong>QA Review (Manual)</strong> → Tests functionality thoroughly</p>
+          <p><strong>Design Review</strong> → If design involved, validates UI/UX</p>
+        </div>
+        
+        <div class="highlight-box" style="margin-top: 30px;">
+          <h3>✅ Final Gate:</h3>
+          <p style="font-size: 1.3em; margin-top: 10px;"><strong>IF ALL APPROVED → Production Released ✅</strong></p>
+          <p style="font-size: 1.3em; margin-top: 10px;"><strong>IF CHANGES REQUIRED → Loop back to Dev ↩️</strong></p>
+        </div>
+      </div>
+    </div>
 
-        updateSlide();
-    </script>
+    <!-- Slide 9: Non-Negotiable Rules -->
+    <div class="slide">
+      <h2>🚫 Non-Negotiable Rules</h2>
+      <div class="content">
+        <div class="highlight-box">
+          <h3>⚖️ For ALL Departments:</h3>
+        </div>
+        
+        <div class="box" style="margin: 20px 0;">
+          <h4>🔒 Rule #1: No PRD = No Coding</h4>
+          <p>Development cannot start without an approved Product Requirements Document</p>
+          <ul style="margin-top: 15px;">
+            <li>Ensures clarity before execution</li>
+            <li>Prevents scope creep and rework</li>
+            <li>All stakeholders aligned on requirements</li>
+          </ul>
+        </div>
+        
+        <div class="box" style="margin: 20px 0;">
+          <h4>📋 Rule #2: No Design Approval = No Development</h4>
+          <p>Design reviews must be completed and approved before coding starts</p>
+        </div>
+        
+        <div class="box" style="margin: 20px 0;">
+          <h4>✅ Rule #3: No Review Pass = No Production</h4>
+          <p>All quality gates (Peer, Lead, QA, PO, Design) must be passed</p>
+        </div>
+        
+        <div class="box" style="margin: 20px 0;">
+          <h4>🎯 Rule #4: Sprint Commitment is Sacred</h4>
+          <p>Once committed in sprint planning, scope cannot change mid-sprint</p>
+        </div>
+        
+        <div class="box" style="margin: 20px 0;">
+          <h4>📊 Rule #5: Daily Standup Attendance Mandatory</h4>
+          <p>9:30 AM standup is non-negotiable for all team members</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 10: Benefits -->
+    <div class="slide">
+      <h2>🎉 Benefits & Outcomes</h2>
+      <div class="content">
+        <div class="benefit-item">
+          <strong>✅ Independent Work Culture</strong>
+          <p>Teams self-organize, take ownership, no micromanagement needed</p>
+        </div>
+        
+        <div class="benefit-item">
+          <strong>✅ Eliminate Heroic Culture</strong>
+          <p>Sustainable workload, proper planning replaces firefighting</p>
+        </div>
+        
+        <div class="benefit-item">
+          <strong>✅ Cross-Team Collaboration</strong>
+          <p>Full visibility into what every team is working on</p>
+        </div>
+        
+        <div class="benefit-item">
+          <strong>✅ Reduced Manager Overhead</strong>
+          <p>No more daily task assignments or 4-hour check-ins</p>
+        </div>
+        
+        <div class="benefit-item">
+          <strong>✅ Predictable Delivery</strong>
+          <p>2-week sprint cycles with clear commitments and velocity tracking</p>
+        </div>
+        
+        <div class="benefit-item">
+          <strong>✅ Quality Gates Built-In</strong>
+          <p>Multiple review stages ensure high standards</p>
+        </div>
+        
+        <div class="benefit-item">
+          <strong>✅ Transparency & Accountability</strong>
+          <p>Real-time visibility into priorities, progress, and blockers</p>
+        </div>
+        
+        <div class="benefit-item">
+          <strong>✅ Better Work-Life Balance</strong>
+          <p>No overburden, sustainable pace, healthier team culture</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="slide-counter">
+    <span id="current-slide">1</span> / <span id="total-slides">10</span>
+  </div>
+
+  <div class="controls">
+    <button id="prev-btn" onclick="previousSlide()">← Previous</button>
+    <button id="next-btn" onclick="nextSlide()">Next →</button>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    
+    document.getElementById('total-slides').textContent = totalSlides;
+    
+    function showSlide(n) {
+      slides.forEach(slide => slide.classList.remove('active'));
+      
+      if (n >= totalSlides) {
+        currentSlide = totalSlides - 1;
+      } else if (n < 0) {
+        currentSlide = 0;
+      } else {
+        currentSlide = n;
+      }
+      
+      slides[currentSlide].classList.add('active');
+      document.getElementById('current-slide').textContent = currentSlide + 1;
+      
+      // Update button states
+      document.getElementById('prev-btn').disabled = currentSlide === 0;
+      document.getElementById('next-btn').disabled = currentSlide === totalSlides - 1;
+    }
+    
+    function nextSlide() {
+      showSlide(currentSlide + 1);
+    }
+    
+    function previousSlide() {
+      showSlide(currentSlide - 1);
+    }
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        previousSlide();
+      }
+    });
+    
+    // Initialize
+    showSlide(0);
+  </script>
 </body>
 </html>
