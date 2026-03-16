@@ -6,110 +6,124 @@
 <title>Ocular Anti-inflammatory Agents</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  :root{
-    --bg:#0a0e1a;--card:#111827;--border:#1e293b;
-    --blue:#60a5fa;--teal:#2dd4bf;--amber:#fbbf24;--coral:#fb7185;--green:#4ade80;
-    --text:#f1f5f9;--muted:#94a3b8;
-  }
-  html{scroll-behavior:smooth}
-  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;overflow-x:hidden}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080f1e;--card:#0f172a;--card2:#111827;--border:#1e2d45;
+  --blue:#60a5fa;--teal:#2dd4bf;--amber:#fbbf24;--coral:#fb7185;--green:#4ade80;--purple:#c084fc;
+  --text:#f1f5f9;--muted:#7f96b0;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden;line-height:1.6}
+#canvas-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.section{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 24px}
+.slide-inner{width:100%;max-width:920px}
 
-  #canvas-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+/* ── progress & nav ── */
+#progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--teal),var(--purple));z-index:999;width:0%;transition:width .1s}
+#nav-dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:9px;z-index:100}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:all .3s}
+.dot.active{background:var(--teal);transform:scale(1.5)}
 
-  .section{
-    position:relative;z-index:1;
-    min-height:100vh;display:flex;align-items:center;justify-content:center;
-    padding:60px 24px;
-  }
+/* ── reveal ── */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .7s ease,transform .7s ease}
+.reveal.vis{opacity:1;transform:none}
+.drug-card{opacity:0;transform:translateY(28px)}
+.drug-card.vis{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease,box-shadow .25s,border-color .25s}
 
-  /* ── Hero ── */
-  #hero{flex-direction:column;text-align:center;gap:20px}
-  #hero .badge{
-    display:inline-block;padding:6px 18px;border-radius:99px;
-    background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.3);
-    font-size:12px;letter-spacing:.1em;color:var(--blue);text-transform:uppercase;
-  }
-  #hero h1{font-size:clamp(2rem,6vw,4rem);font-weight:700;line-height:1.1;
-    background:linear-gradient(135deg,#fff 30%,var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  #hero .sub{font-size:1.1rem;color:var(--muted);max-width:560px}
-  #hero .scroll-hint{margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-size:.8rem}
-  .arrow-down{width:24px;height:24px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);animation:bounce 1.4s infinite}
-  @keyframes bounce{0%,100%{transform:rotate(45deg) translateY(0)}50%{transform:rotate(45deg) translateY(6px)}}
+/* ── hero ── */
+#hero{flex-direction:column;text-align:center;gap:18px}
+.hero-presenter{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:4px}
+#hero h1{font-size:clamp(2.4rem,7vw,4.6rem);font-weight:800;line-height:1.05;
+  background:linear-gradient(135deg,#e2e8f0 20%,var(--teal) 60%,var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-tagline{font-size:1rem;color:var(--muted);max-width:520px;line-height:1.7}
+.hero-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:8px}
+.chip{padding:5px 16px;border-radius:99px;font-size:.75rem;font-weight:600;border:1px solid;letter-spacing:.04em}
+.scroll-hint{margin-top:36px;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-size:.78rem}
+.arrow-down{width:22px;height:22px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);animation:bounce 1.5s infinite}
+@keyframes bounce{0%,100%{transform:rotate(45deg) translateY(0)}50%{transform:rotate(45deg) translateY(7px)}}
 
-  /* ── Slide cards ── */
-  .slide-inner{width:100%;max-width:900px}
-  .slide-label{font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
-  .slide-title{font-size:clamp(1.4rem,4vw,2.4rem);font-weight:700;margin-bottom:8px}
-  .slide-sub{color:var(--muted);font-size:.95rem;margin-bottom:32px;max-width:600px;line-height:1.6}
+/* ── section header ── */
+.sec-label{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.sec-title{font-size:clamp(1.5rem,4vw,2.5rem);font-weight:700;margin-bottom:10px;line-height:1.1}
+.sec-intro{color:var(--muted);font-size:.9rem;margin-bottom:32px;max-width:680px;line-height:1.75}
 
-  /* drug grid */
-  .drug-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
-  .drug-card{
-    background:var(--card);border:1px solid var(--border);border-radius:14px;
-    padding:20px 16px;transition:transform .25s,box-shadow .25s;cursor:default;
-    opacity:0;transform:translateY(30px);
-  }
-  .drug-card.visible{opacity:1;transform:translateY(0);transition:opacity .5s ease,transform .5s ease,box-shadow .25s}
-  .drug-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,.5)}
-  .drug-card .icon{font-size:1.6rem;margin-bottom:10px}
-  .drug-card h3{font-size:.95rem;font-weight:600;margin-bottom:4px}
-  .drug-card p{font-size:.78rem;color:var(--muted);line-height:1.5}
-  .drug-card .tag{
-    display:inline-block;margin-top:10px;padding:2px 10px;border-radius:99px;
-    font-size:.68rem;font-weight:600;letter-spacing:.05em;
-  }
+/* ── cards ── */
+.drug-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+.drug-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 18px;cursor:default}
+.drug-card:hover{box-shadow:0 10px 36px rgba(0,0,0,.55)}
+.drug-card .d-icon{font-size:1.5rem;margin-bottom:10px}
+.drug-card h3{font-size:.9rem;font-weight:700;margin-bottom:5px;line-height:1.3}
+.drug-card p{font-size:.76rem;color:var(--muted);line-height:1.6}
+.tag{display:inline-block;margin-top:10px;padding:2px 11px;border-radius:99px;font-size:.67rem;font-weight:700;letter-spacing:.06em}
 
-  /* category pills */
-  .cat-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
-  .cat-pill{
-    padding:6px 16px;border-radius:99px;font-size:.8rem;font-weight:600;
-    border:1px solid transparent;cursor:pointer;transition:all .2s;
-  }
-  .cat-pill.active,.cat-pill:hover{opacity:1}
-  .cat-pill{opacity:.6}
+/* ── info box ── */
+.info-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px 26px;margin-bottom:16px}
+.info-box h3{font-size:1rem;font-weight:700;margin-bottom:8px}
+.info-box p,.info-box li{font-size:.82rem;color:var(--muted);line-height:1.75}
+.info-box ul{padding-left:16px}
 
-  /* comparison table */
-  .comp-table{width:100%;border-collapse:collapse;font-size:.82rem}
-  .comp-table th{color:var(--muted);font-weight:500;text-align:left;padding:8px 12px;border-bottom:1px solid var(--border)}
-  .comp-table td{padding:10px 12px;border-bottom:1px solid rgba(30,41,59,.5);vertical-align:top}
-  .comp-table tr:last-child td{border-bottom:none}
+/* ── two-col ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:620px){.two-col,.drug-grid{grid-template-columns:1fr}.mast-detail{grid-template-columns:1fr}}
 
-  /* mast cell section */
-  .mast-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-  @media(max-width:600px){.mast-grid,.drug-grid{grid-template-columns:1fr}}
+/* ── mechanism ── */
+.mech-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px}
+.mech-step{display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid rgba(30,41,59,.6)}
+.mech-step:last-child{border-bottom:none}
+.step-num{min-width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;flex-shrink:0}
+.step-body h4{font-size:.88rem;font-weight:700;margin-bottom:4px}
+.step-body p{font-size:.78rem;color:var(--muted);line-height:1.6}
 
-  /* mechanism diagram */
-  .mech-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;margin-top:8px}
-  .mech-steps{display:flex;flex-direction:column;gap:0}
-  .mech-step{display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid rgba(30,41,59,.5)}
-  .mech-step:last-child{border-bottom:none}
-  .step-num{min-width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem}
-  .mech-step .step-body h4{font-size:.9rem;font-weight:600;margin-bottom:3px}
-  .mech-step .step-body p{font-size:.78rem;color:var(--muted);line-height:1.5}
+/* ── comparison ── */
+.comp-table{width:100%;border-collapse:collapse;font-size:.8rem}
+.comp-table th{color:var(--muted);font-weight:600;text-align:left;padding:9px 13px;border-bottom:1px solid var(--border);font-size:.75rem;letter-spacing:.05em;text-transform:uppercase}
+.comp-table td{padding:10px 13px;border-bottom:1px solid rgba(30,41,59,.4);vertical-align:top;line-height:1.5}
+.comp-table tr:last-child td{border-bottom:none}
+.comp-table tr:hover td{background:rgba(255,255,255,.02)}
 
-  /* side effects */
-  .se-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .se-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
-  .se-item .se-icon{font-size:1.3rem;margin-bottom:6px}
-  .se-item h4{font-size:.85rem;font-weight:600;margin-bottom:4px}
-  .se-item ul{font-size:.75rem;color:var(--muted);padding-left:14px;line-height:1.8}
+/* ── side effects ── */
+.se-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:580px){.se-grid{grid-template-columns:1fr}}
+.se-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.se-item .se-icon{font-size:1.3rem;margin-bottom:6px}
+.se-item h4{font-size:.84rem;font-weight:700;margin-bottom:6px}
+.se-item ul{font-size:.75rem;color:var(--muted);padding-left:14px;line-height:1.8}
 
-  /* progress */
-  #progress-bar{
-    position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--teal));
-    z-index:999;width:0%;transition:width .1s linear;
-  }
-  #nav-dots{
-    position:fixed;right:20px;top:50%;transform:translateY(-50%);
-    display:flex;flex-direction:column;gap:10px;z-index:100;
-  }
-  .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:all .3s}
-  .dot.active{background:var(--teal);transform:scale(1.4)}
+/* ── pearl box ── */
+.pearl{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.25);border-radius:12px;padding:20px 24px}
+.pearl-label{font-size:.75rem;font-weight:700;color:var(--amber);margin-bottom:6px}
+.pearl p{font-size:.8rem;color:var(--muted);line-height:1.75}
 
-  /* reveal animation */
-  .reveal{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease}
-  .reveal.visible{opacity:1;transform:none}
+/* ── pill row ── */
+.pill-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+.pill{padding:5px 16px;border-radius:99px;font-size:.76rem;font-weight:600;border:1px solid;opacity:.65;cursor:pointer;transition:opacity .2s}
+.pill:hover,.pill.on{opacity:1}
+
+/* ── highlight band ── */
+.hband{border-left:3px solid;padding:14px 18px;border-radius:0 10px 10px 0;margin-bottom:14px;background:rgba(255,255,255,.03)}
+.hband h4{font-size:.88rem;font-weight:700;margin-bottom:4px}
+.hband p{font-size:.78rem;color:var(--muted);line-height:1.65}
+
+/* ── indication matrix ── */
+.ind-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.ind-card{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:16px 14px;text-align:center}
+.ind-card .ind-icon{font-size:1.8rem;margin-bottom:8px}
+.ind-card h4{font-size:.8rem;font-weight:700;margin-bottom:4px}
+.ind-card p{font-size:.7rem;color:var(--muted);line-height:1.5}
+
+/* ── quiz card ── */
+.quiz-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px}
+.quiz-q{font-size:.95rem;font-weight:600;margin-bottom:18px;line-height:1.5}
+.quiz-opts{display:flex;flex-direction:column;gap:10px}
+.quiz-opt{padding:11px 16px;border-radius:9px;border:1px solid var(--border);font-size:.82rem;cursor:pointer;transition:all .2s;color:var(--muted);text-align:left}
+.quiz-opt:hover{border-color:var(--teal);color:var(--text)}
+.quiz-opt.correct{border-color:var(--green);background:rgba(74,222,128,.1);color:var(--green)}
+.quiz-opt.wrong{border-color:var(--coral);background:rgba(251,113,133,.1);color:var(--coral)}
+.quiz-feedback{margin-top:14px;font-size:.8rem;line-height:1.6;padding:12px 16px;border-radius:9px;display:none}
+.quiz-next{margin-top:14px;padding:9px 22px;border-radius:9px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:.82rem;cursor:pointer;font-weight:600;display:none}
+.quiz-next:hover{background:rgba(45,212,191,.1)}
+.quiz-counter{font-size:.72rem;color:var(--muted);margin-bottom:12px}
 </style>
 </head>
 <body>
@@ -117,233 +131,423 @@
 <div id="progress-bar"></div>
 <canvas id="canvas-bg"></canvas>
 
-<nav id="nav-dots">
-  <div class="dot" data-target="hero" title="Title"></div>
-  <div class="dot" data-target="s1" title="Unit 5 Overview"></div>
-  <div class="dot" data-target="s2" title="Steroids List"></div>
-  <div class="dot" data-target="s3" title="Steroid Mechanism"></div>
-  <div class="dot" data-target="s4" title="Non-Steroids"></div>
-  <div class="dot" data-target="s5" title="Mast Cell Stabilizers"></div>
-  <div class="dot" data-target="s6" title="Comparison"></div>
-  <div class="dot" data-target="s7" title="Side Effects"></div>
-</nav>
+<nav id="nav-dots"></nav>
 
-<!-- ═══════════════════════ HERO ═══════════════════════ -->
-<section class="section" id="hero">
-  <div class="badge">Ocular Pharmacology · March 2026</div>
-  <h1>Unit 5<br/>Anti-inflammatory<br/>Agents</h1>
-  <p class="sub">A comprehensive visual guide to ocular steroids, NSAIDs, and mast cell stabilizers used in ophthalmic practice.</p>
-  <div class="scroll-hint">
-    <span>Scroll to explore</span>
-    <div class="arrow-down"></div>
+<!-- ════ HERO ════ -->
+<section class="section" id="s0">
+<div style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px">
+  <p class="hero-presenter">Ocular Pharmacology · March 2026 · Presented by</p>
+  <h1>Ocular Anti-<br/>inflammatory<br/>Agents</h1>
+  <p style="font-size:1.15rem;font-weight:600;color:var(--teal);letter-spacing:.04em">Dr Salu Agarwal</p>
+  <p class="hero-tagline">Understanding the pharmacology, classification, mechanisms, clinical indications, and side effects of anti-inflammatory drugs used in modern ophthalmic practice.</p>
+  <div class="hero-chips">
+    <span class="chip" style="color:var(--blue);border-color:rgba(96,165,250,.4)">Corticosteroids</span>
+    <span class="chip" style="color:var(--teal);border-color:rgba(45,212,191,.4)">NSAIDs</span>
+    <span class="chip" style="color:var(--amber);border-color:rgba(251,191,36,.4)">Mast Cell Stabilizers</span>
+    <span class="chip" style="color:var(--purple);border-color:rgba(192,132,252,.4)">Antihistamines</span>
   </div>
+  <div class="scroll-hint"><span>Scroll to begin</span><div class="arrow-down"></div></div>
+</div>
 </section>
 
-<!-- ═══════════════════════ S1: OVERVIEW ═══════════════════════ -->
+<!-- ════ INFLAMMATION BASICS ════ -->
 <section class="section" id="s1">
-  <div class="slide-inner">
-    <div class="slide-label reveal">Unit 5 — Overview</div>
-    <h2 class="slide-title reveal">Ocular Anti-inflammatory<br/>Agents at a Glance</h2>
-    <p class="slide-sub reveal">Inflammation in the eye is managed by two major drug classes. This unit covers their pharmacology, clinical use, and safety profiles.</p>
-    <div class="drug-grid" style="grid-template-columns:1fr 1fr 1fr">
-      <div class="drug-card" style="border-color:rgba(96,165,250,.35)">
-        <div class="icon">💊</div>
-        <h3>Corticosteroids</h3>
-        <p>Most potent anti-inflammatory agents for ocular use. Act on phospholipase A2 pathway.</p>
-        <span class="tag" style="background:rgba(96,165,250,.15);color:var(--blue)">Session 1</span>
-      </div>
-      <div class="drug-card" style="border-color:rgba(45,212,191,.35)">
-        <div class="icon">🧪</div>
-        <h3>NSAIDs</h3>
-        <p>COX inhibitors. Effective for pain, photophobia, and post-op inflammation.</p>
-        <span class="tag" style="background:rgba(45,212,191,.15);color:var(--teal)">Session 2</span>
-      </div>
-      <div class="drug-card" style="border-color:rgba(251,191,36,.35)">
-        <div class="icon">🛡️</div>
-        <h3>Mast Cell Stabilizers</h3>
-        <p>Prevent degranulation. First-line for allergic conjunctivitis.</p>
-        <span class="tag" style="background:rgba(251,191,36,.15);color:var(--amber)">Session 2</span>
-      </div>
+<div class="slide-inner">
+  <div class="sec-label reveal">Foundation</div>
+  <h2 class="sec-title reveal">What is Ocular Inflammation?</h2>
+  <p class="sec-intro reveal">Before prescribing anti-inflammatory agents, an OA student must understand the biology of inflammation in the eye — its triggers, mediators, and consequences on ocular structures.</p>
+
+  <div class="two-col reveal">
+    <div class="info-box">
+      <h3 style="color:var(--blue)">🔥 The Inflammatory Cascade</h3>
+      <p>When ocular tissue is damaged or exposed to antigens, phospholipase A₂ is activated in cell membranes. This releases <strong style="color:var(--text)">arachidonic acid</strong>, which is metabolised through two key pathways:</p>
+      <ul style="margin-top:10px">
+        <li><strong style="color:var(--teal)">COX pathway →</strong> Prostaglandins & Thromboxanes — cause vasodilation, pain, and vascular permeability</li>
+        <li><strong style="color:var(--coral)">LOX pathway →</strong> Leukotrienes — attract neutrophils, cause chemotaxis and further tissue damage</li>
+      </ul>
+    </div>
+    <div class="info-box">
+      <h3 style="color:var(--amber)">👁️ Why the Eye is Unique</h3>
+      <p>The eye has <strong style="color:var(--text)">immune privilege</strong> — the blood-ocular barrier limits systemic immune access. When this barrier is breached:</p>
+      <ul style="margin-top:10px">
+        <li>Breakdown of the blood-aqueous barrier causes flare and cells in the anterior chamber</li>
+        <li>Leakage at the macula leads to cystoid macular oedema (CME)</li>
+        <li>Unchecked inflammation → synechiae, cataract, glaucoma, phthisis</li>
+      </ul>
     </div>
   </div>
+
+  <div class="two-col reveal" style="margin-top:16px">
+    <div class="info-box">
+      <h3 style="color:var(--purple)">🧬 Key Inflammatory Mediators</h3>
+      <ul>
+        <li><strong style="color:var(--text)">Prostaglandin E₂ & PGI₂</strong> — vasodilation, pain, IOP fluctuation</li>
+        <li><strong style="color:var(--text)">Leukotriene B₄</strong> — neutrophil chemotaxis</li>
+        <li><strong style="color:var(--text)">Histamine</strong> — immediate hypersensitivity, itch, redness</li>
+        <li><strong style="color:var(--text)">IL-1, TNF-α</strong> — amplify inflammation via NF-κB</li>
+        <li><strong style="color:var(--text)">PAF (Platelet Activating Factor)</strong> — potent pro-inflammatory phospholipid</li>
+      </ul>
+    </div>
+    <div class="info-box">
+      <h3 style="color:var(--green)">📋 Types of Ocular Inflammation</h3>
+      <ul>
+        <li><strong style="color:var(--text)">Uveitis</strong> — anterior, intermediate, posterior, panuveitis</li>
+        <li><strong style="color:var(--text)">Allergic conjunctivitis</strong> — seasonal, perennial, vernal, atopic</li>
+        <li><strong style="color:var(--text)">Scleritis / Episcleritis</strong></li>
+        <li><strong style="color:var(--text)">Post-surgical inflammation</strong> — after cataract, refractive, vitreoretinal surgery</li>
+        <li><strong style="color:var(--text)">Corneal graft rejection</strong></li>
+        <li><strong style="color:var(--text)">Dry eye disease</strong> — inflammatory component</li>
+      </ul>
+    </div>
+  </div>
+</div>
 </section>
 
-<!-- ═══════════════════════ S2: STEROIDS ═══════════════════════ -->
+<!-- ════ CLASSIFICATION ════ -->
 <section class="section" id="s2">
-  <div class="slide-inner">
-    <div class="slide-label reveal">Session 1</div>
-    <h2 class="slide-title reveal" style="color:var(--blue)">Ocular Corticosteroids</h2>
-    <p class="slide-sub reveal">Topical, periocular & intravitreal steroids used in ophthalmic practice</p>
+<div class="slide-inner">
+  <div class="sec-label reveal">Classification</div>
+  <h2 class="sec-title reveal">Drug Classes Overview</h2>
+  <p class="sec-intro reveal">Ocular anti-inflammatory agents are broadly divided based on their mechanism and chemical nature. Each class has a specific role, onset, potency, and risk profile.</p>
 
-    <div class="cat-row reveal">
-      <div class="cat-pill active" style="background:rgba(96,165,250,.15);color:var(--blue);border-color:rgba(96,165,250,.4)">All</div>
-      <div class="cat-pill" style="background:rgba(251,191,36,.1);color:var(--amber);border-color:rgba(251,191,36,.4)">High potency</div>
-      <div class="cat-pill" style="background:rgba(45,212,191,.1);color:var(--teal);border-color:rgba(45,212,191,.4)">Soft steroid</div>
-    </div>
+  <div class="drug-grid" id="class-grid"></div>
 
-    <div class="drug-grid" id="steroid-grid">
-      <!-- cards injected by JS -->
+  <div class="info-box reveal" style="margin-top:20px">
+    <h3 style="color:var(--blue)">📌 Routes of Administration in Ophthalmic Practice</h3>
+    <div class="two-col" style="margin-top:10px">
+      <ul>
+        <li><strong style="color:var(--text)">Topical drops/ointment</strong> — most common; acts locally with limited systemic absorption</li>
+        <li><strong style="color:var(--text)">Periocular injection</strong> — subconjunctival, sub-Tenon, posterior juxtascleral; bypasses corneal barrier</li>
+        <li><strong style="color:var(--text)">Intravitreal injection</strong> — direct posterior segment delivery; triamcinolone, dexamethasone implant</li>
+      </ul>
+      <ul>
+        <li><strong style="color:var(--text)">Systemic oral</strong> — for severe uveitis, scleritis; prednisolone 1 mg/kg/day</li>
+        <li><strong style="color:var(--text)">IV pulse</strong> — methylprednisolone 1 g/day × 3 for severe posterior uveitis</li>
+        <li><strong style="color:var(--text)">Sustained-release implants</strong> — Ozurdex (DEX), Iluvien (FAc), Yutiq (FAc)</li>
+      </ul>
     </div>
   </div>
+</div>
 </section>
 
-<!-- ═══════════════════════ S3: MECHANISM ═══════════════════════ -->
+<!-- ════ CORTICOSTEROIDS DEEP DIVE ════ -->
 <section class="section" id="s3">
-  <div class="slide-inner">
-    <div class="slide-label reveal">Pharmacology</div>
-    <h2 class="slide-title reveal">How Steroids Work</h2>
-    <p class="slide-sub reveal">Glucocorticoid receptor–mediated suppression of the arachidonic acid cascade</p>
-    <div class="mech-wrap reveal">
-      <div class="mech-steps" id="mech-steps"></div>
+<div class="slide-inner">
+  <div class="sec-label reveal">Corticosteroids</div>
+  <h2 class="sec-title reveal" style="color:var(--blue)">Mechanism & Pharmacology<br/>of Ocular Steroids</h2>
+  <p class="sec-intro reveal">Corticosteroids remain the gold standard for treating ocular inflammation. They act at multiple levels of the inflammatory cascade, making them far more potent than NSAIDs.</p>
+
+  <div class="mech-wrap reveal" id="mech-steps"></div>
+
+  <div class="two-col reveal" style="margin-top:18px">
+    <div class="info-box">
+      <h3 style="color:var(--teal)">💧 Pharmacokinetics of Topical Steroids</h3>
+      <ul>
+        <li><strong style="color:var(--text)">Absorption:</strong> Penetration depends on lipophilicity, vehicle, and corneal epithelial integrity. Suspension forms (e.g. prednisolone acetate) penetrate better than solutions</li>
+        <li><strong style="color:var(--text)">Distribution:</strong> Reaches aqueous humour, iris, ciliary body. Posterior penetration is poor from topical route</li>
+        <li><strong style="color:var(--text)">Metabolism:</strong> Local esterases in the cornea activate prodrugs (e.g. loteprednol etabonate). Soft steroids undergo predictable local metabolism → low systemic levels</li>
+        <li><strong style="color:var(--text)">Elimination:</strong> Via nasolacrimal drainage → systemic absorption via nasal mucosa (minimise by punctal occlusion)</li>
+      </ul>
+    </div>
+    <div class="info-box">
+      <h3 style="color:var(--purple)">⚖️ Potency Spectrum</h3>
+      <div class="hband" style="border-color:var(--coral)"><h4 style="color:var(--coral)">High Potency</h4><p>Prednisolone acetate 1%, Dexamethasone 0.1%, Betamethasone — used for active anterior uveitis, corneal graft rejection, severe post-op inflammation</p></div>
+      <div class="hband" style="border-color:var(--amber)"><h4 style="color:var(--amber)">Medium Potency</h4><p>Fluorometholone 0.1%, Medrysone — preferred for surface disease, allergic conjunctivitis; lower IOP risk</p></div>
+      <div class="hband" style="border-color:var(--green)"><h4 style="color:var(--green)">Soft Steroids (Retrometabolic)</h4><p>Loteprednol etabonate, Rimexolone — designed to undergo predictable local metabolism; lowest risk of IOP elevation and cataract</p></div>
     </div>
   </div>
+
+  <div class="info-box reveal" style="margin-top:4px">
+    <h3 style="color:var(--blue)">🩺 Clinical Indications for Ocular Steroids</h3>
+    <div class="ind-grid" style="margin-top:14px" id="indication-grid"></div>
+  </div>
+</div>
 </section>
 
-<!-- ═══════════════════════ S4: NSAIDs ═══════════════════════ -->
+<!-- ════ NSAIDs ════ -->
 <section class="section" id="s4">
-  <div class="slide-inner">
-    <div class="slide-label reveal">Session 2 — Part A</div>
-    <h2 class="slide-title reveal" style="color:var(--teal)">Ocular NSAIDs</h2>
-    <p class="slide-sub reveal">Non-steroidal anti-inflammatory drops — inhibit COX-1 and COX-2 enzymes</p>
-    <div class="drug-grid" id="nsaid-grid"></div>
+<div class="slide-inner">
+  <div class="sec-label reveal">NSAIDs</div>
+  <h2 class="sec-title reveal" style="color:var(--teal)">Non-Steroidal Anti-inflammatory<br/>Drugs (NSAIDs)</h2>
+  <p class="sec-intro reveal">Topical NSAIDs inhibit cyclooxygenase (COX) enzymes, preventing prostaglandin synthesis. They are steroid-sparing agents particularly valued for post-surgical use and pain management.</p>
+
+  <div class="two-col reveal">
+    <div class="info-box">
+      <h3 style="color:var(--teal)">⚙️ Mechanism of Action</h3>
+      <p>NSAIDs competitively and irreversibly inhibit <strong style="color:var(--text)">COX-1 and COX-2</strong> enzymes. This prevents conversion of arachidonic acid to prostaglandins and thromboxanes. Unlike steroids, NSAIDs do NOT inhibit phospholipase A₂ — leukotrienes continue to be formed. This is why NSAIDs are less potent than steroids for severe inflammation.</p>
+    </div>
+    <div class="info-box">
+      <h3 style="color:var(--blue)">🎯 COX-1 vs COX-2 in the Eye</h3>
+      <ul>
+        <li><strong style="color:var(--text)">COX-1</strong> — constitutive; maintains normal corneal epithelium, aqueous production</li>
+        <li><strong style="color:var(--text)">COX-2</strong> — inducible; upregulated in surgical trauma, uveitis, corneal injury</li>
+        <li>Most topical NSAIDs are non-selective (inhibit both). Non-selective inhibition of COX-1 may impair corneal healing — a key safety concern</li>
+      </ul>
+    </div>
   </div>
+
+  <div class="info-box reveal" style="margin-top:4px">
+    <h3 style="color:var(--teal)">📋 Key Clinical Uses of Topical NSAIDs</h3>
+    <div class="two-col" style="margin-top:12px">
+      <ul>
+        <li><strong style="color:var(--text)">Prevention of intra-operative miosis</strong> during cataract surgery (prostaglandins cause pupil constriction)</li>
+        <li><strong style="color:var(--text)">Post-cataract surgery inflammation</strong> — pain, photophobia, pseudophakic CME prophylaxis</li>
+        <li><strong style="color:var(--text)">Allergic conjunctivitis</strong> — ketorolac reduces itch by blocking prostaglandin-mediated itch receptors</li>
+        <li><strong style="color:var(--text)">Refractive surgery (PRK/LASIK)</strong> — analgesia without steroid side effects</li>
+      </ul>
+      <ul>
+        <li><strong style="color:var(--text)">Cystoid macular oedema (CME)</strong> — prophylaxis and treatment; often combined with steroids</li>
+        <li><strong style="color:var(--text)">Episcleritis</strong> — mild cases respond well to topical NSAIDs alone</li>
+        <li><strong style="color:var(--text)">Seasonal allergic conjunctivitis</strong> — ketorolac approved for ocular itch relief</li>
+        <li><strong style="color:var(--text)">Diabetic macular oedema</strong> — adjunctive role studied with nepafenac</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="two-col reveal" style="margin-top:16px">
+    <div class="info-box">
+      <h3 style="color:var(--amber)">⚠️ Corneal Toxicity — The Critical Concern</h3>
+      <p>Prolonged or inappropriate NSAID use can cause <strong style="color:var(--text)">sterile corneal melt (keratolysis)</strong> — a serious, sight-threatening complication. Risk factors include:</p>
+      <ul style="margin-top:8px">
+        <li>Pre-existing dry eye disease</li>
+        <li>Corneal epithelial defects</li>
+        <li>Combined use of multiple topical agents</li>
+        <li>Older generation formulations (diclofenac)</li>
+      </ul>
+    </div>
+    <div class="info-box">
+      <h3 style="color:var(--purple)">🔬 Drug Delivery Innovations</h3>
+      <ul>
+        <li><strong style="color:var(--text)">Nepafenac (prodrug)</strong> — penetrates cornea and is converted to amfenac by intraocular esterases; higher intraocular bioavailability</li>
+        <li><strong style="color:var(--text)">Bromfenac</strong> — once-daily dosing due to prolonged tissue binding; contains a bromine atom enhancing potency</li>
+        <li><strong style="color:var(--text)">Flurbiprofen</strong> — primarily used intra-operatively to maintain mydriasis during surgery</li>
+      </ul>
+    </div>
+  </div>
+</div>
 </section>
 
-<!-- ═══════════════════════ S5: MAST CELL ═══════════════════════ -->
+<!-- ════ MAST CELL STABILIZERS ════ -->
 <section class="section" id="s5">
-  <div class="slide-inner">
-    <div class="slide-label reveal">Session 2 — Part B</div>
-    <h2 class="slide-title reveal" style="color:var(--amber)">Mast Cell Stabilizers</h2>
-    <p class="slide-sub reveal">Prevent IgE-mediated degranulation of mast cells — cornerstone of allergic eye disease</p>
-    <div class="drug-grid" id="mast-grid"></div>
+<div class="slide-inner">
+  <div class="sec-label reveal">Mast Cell Stabilizers & Antihistamines</div>
+  <h2 class="sec-title reveal" style="color:var(--amber)">Allergy Mediator<br/>Inhibitors</h2>
+  <p class="sec-intro reveal">Allergic eye diseases affect up to 20% of the population. Understanding mast cells, histamine receptors, and dual-action agents is essential for managing these common conditions.</p>
+
+  <div class="two-col reveal">
+    <div class="info-box">
+      <h3 style="color:var(--amber)">🔬 Mast Cell Biology</h3>
+      <p>Mast cells are concentrated in the <strong style="color:var(--text)">conjunctival stroma</strong> (~5,000 cells/mm²). They contain granules packed with histamine, tryptase, and other mediators. In allergic disease:</p>
+      <ul style="margin-top:10px">
+        <li><strong style="color:var(--text)">Sensitisation:</strong> IgE antibodies bind to FcεRI receptors on mast cells upon first antigen exposure</li>
+        <li><strong style="color:var(--text)">Challenge:</strong> Re-exposure cross-links IgE → mast cell degranulation</li>
+        <li><strong style="color:var(--text)">Early phase:</strong> Histamine, tryptase released within minutes → itch, redness, chemosis</li>
+        <li><strong style="color:var(--text)">Late phase:</strong> Eosinophils, neutrophils recruited → chronic inflammation, papillae, giant papillae in VKC</li>
+      </ul>
+    </div>
+    <div class="info-box">
+      <h3 style="color:var(--coral)">💊 How Mast Cell Stabilizers Work</h3>
+      <p>Sodium cromoglicate and lodoxamide <strong style="color:var(--text)">block calcium channels</strong> on the mast cell membrane. This prevents the rise in intracellular Ca²⁺ that triggers degranulation. Key points:</p>
+      <ul style="margin-top:10px">
+        <li>They do NOT reverse established symptoms — purely <strong style="color:var(--text)">prophylactic</strong></li>
+        <li>Must be started <strong style="color:var(--text)">2–4 weeks before</strong> allergen season for optimal effect</li>
+        <li>Require frequent dosing (4× daily) — patient compliance is a challenge</li>
+        <li>No risk of IOP elevation or cataract — excellent long-term safety</li>
+      </ul>
+    </div>
   </div>
+
+  <div class="info-box reveal" style="margin-top:16px">
+    <h3 style="color:var(--green)">🧬 Dual-Action Agents — The Modern Approach</h3>
+    <p style="margin-bottom:12px">Second-generation drugs combine <strong style="color:var(--text)">H₁ receptor antagonism</strong> (immediate relief) with <strong style="color:var(--text)">mast cell stabilisation</strong> (long-term prevention). This dual mechanism means they can be started any time, even after symptoms begin.</p>
+    <div class="two-col">
+      <div>
+        <div class="hband" style="border-color:var(--teal)"><h4 style="color:var(--teal)">H₁ Antagonism Component</h4><p>Blocks histamine from binding H₁ receptors on conjunctival blood vessels and sensory nerve endings → rapid relief of itch and redness within 3–15 minutes</p></div>
+        <div class="hband" style="border-color:var(--amber)"><h4 style="color:var(--amber)">Mast Cell Stabilisation Component</h4><p>Prevents further mediator release, reducing the late-phase response and recurrence. Also inhibits eosinophil infiltration in chronic disease</p></div>
+      </div>
+      <div>
+        <div class="hband" style="border-color:var(--purple)"><h4 style="color:var(--purple)">Additional Actions of Olopatadine</h4><p>Inhibits release of prostaglandins, leukotrienes, and tryptase. Olopatadine 0.2% (once-daily) achieves 24-hour itch relief — highest evidence base among all topical allergy agents</p></div>
+        <div class="hband" style="border-color:var(--green)"><h4 style="color:var(--green)">Ketotifen — OTC Access</h4><p>Available over-the-counter in many countries; BID dosing; also inhibits eosinophil activation, making it useful in vernal keratoconjunctivitis (VKC) as adjunctive therapy</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box reveal" style="margin-top:16px">
+    <h3 style="color:var(--amber)">🗂️ Grading Allergic Conjunctivitis Severity</h3>
+    <div class="two-col" style="margin-top:10px">
+      <ul>
+        <li><strong style="color:var(--text)">Mild SAC/PAC</strong> — seasonal/perennial; mast cell stabilizer or dual-action agent alone</li>
+        <li><strong style="color:var(--text)">Moderate SAC/PAC</strong> — add short course topical steroid (FML or loteprednol); cold compresses, avoid triggers</li>
+      </ul>
+      <ul>
+        <li><strong style="color:var(--text)">Vernal Keratoconjunctivitis (VKC)</strong> — intensive therapy: mast cell stabilizer + topical steroid + lodoxamide; cyclosporin 0.05% for steroid-sparing</li>
+        <li><strong style="color:var(--text)">Atopic Keratoconjunctivitis (AKC)</strong> — systemic antihistamines + topical therapy; risk of corneal shield ulcer; tacrolimus</li>
+      </ul>
+    </div>
+  </div>
+</div>
 </section>
 
-<!-- ═══════════════════════ S6: COMPARISON ═══════════════════════ -->
+<!-- ════ COMPARISON ════ -->
 <section class="section" id="s6">
-  <div class="slide-inner">
-    <div class="slide-label reveal">Quick Reference</div>
-    <h2 class="slide-title reveal">Class Comparison</h2>
-    <p class="slide-sub reveal">Choose the right anti-inflammatory for the right indication</p>
-    <div class="mech-wrap reveal">
-      <table class="comp-table">
-        <thead>
-          <tr>
-            <th>Feature</th>
-            <th style="color:var(--blue)">Steroids</th>
-            <th style="color:var(--teal)">NSAIDs</th>
-            <th style="color:var(--amber)">Mast Cell Stabilizers</th>
-          </tr>
-        </thead>
-        <tbody id="comp-tbody"></tbody>
-      </table>
+<div class="slide-inner">
+  <div class="sec-label reveal">Quick Reference</div>
+  <h2 class="sec-title reveal">Class Comparison</h2>
+  <p class="sec-intro reveal">A comprehensive feature-by-feature comparison to aid clinical decision-making and exam preparation.</p>
+  <div class="mech-wrap reveal">
+    <table class="comp-table">
+      <thead><tr>
+        <th>Feature</th>
+        <th style="color:var(--blue)">Corticosteroids</th>
+        <th style="color:var(--teal)">NSAIDs</th>
+        <th style="color:var(--amber)">Mast Cell Stabilizers</th>
+        <th style="color:var(--purple)">Dual-Action</th>
+      </tr></thead>
+      <tbody id="comp-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="two-col reveal" style="margin-top:18px">
+    <div class="info-box">
+      <h3 style="color:var(--blue)">🔄 Steroid-Sparing Strategies</h3>
+      <p>Long-term steroids cause significant side effects. OA students must know these alternatives:</p>
+      <ul style="margin-top:8px">
+        <li><strong style="color:var(--text)">Topical ciclosporin 0.05% (Restasis)</strong> — calcineurin inhibitor; inhibits T-cell activation; used in dry eye-related inflammation and VKC</li>
+        <li><strong style="color:var(--text)">Topical tacrolimus</strong> — more potent calcineurin inhibitor; used off-label in AKC, VKC, and corneal graft rejection prophylaxis</li>
+        <li><strong style="color:var(--text)">Topical NSAIDs</strong> — adjunct to reduce steroid dose post-surgically</li>
+        <li><strong style="color:var(--text)">Systemic immunosuppressants</strong> — methotrexate, mycophenolate, azathioprine for chronic uveitis</li>
+      </ul>
+    </div>
+    <div class="info-box">
+      <h3 style="color:var(--teal)">💡 Intravitreal Steroid Implants</h3>
+      <ul>
+        <li><strong style="color:var(--text)">Ozurdex</strong> (dexamethasone 0.7 mg biodegradable) — approved for BRVO, CRVO, non-infectious uveitis, DME; duration ~3–6 months</li>
+        <li><strong style="color:var(--text)">Iluvien</strong> (fluocinolone acetonide 0.19 mg) — non-biodegradable; 36 months release; approved for chronic DME</li>
+        <li><strong style="color:var(--text)">Yutiq</strong> (fluocinolone acetonide 0.18 mg) — for non-infectious posterior uveitis; 36 months</li>
+        <li>IOP monitoring mandatory with all implants; ~35% require IOP-lowering treatment</li>
+      </ul>
     </div>
   </div>
+</div>
 </section>
 
-<!-- ═══════════════════════ S7: SIDE EFFECTS ═══════════════════════ -->
+<!-- ════ SIDE EFFECTS ════ -->
 <section class="section" id="s7">
-  <div class="slide-inner">
-    <div class="slide-label reveal">Safety Profile</div>
-    <h2 class="slide-title reveal">Side Effects & Precautions</h2>
-    <p class="slide-sub reveal">Key adverse effects to remember for clinical and exam purposes</p>
-    <div class="se-grid reveal" id="se-grid"></div>
+<div class="slide-inner">
+  <div class="sec-label reveal">Safety Profile</div>
+  <h2 class="sec-title reveal">Side Effects & Adverse Effects</h2>
+  <p class="sec-intro reveal">Knowing adverse effects is as important as knowing indications. These are high-yield exam and clinical topics.</p>
+  <div class="se-grid reveal" id="se-grid"></div>
 
-    <div style="margin-top:40px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);border-radius:12px;padding:20px 24px" class="reveal">
-      <p style="font-size:.82rem;font-weight:600;color:var(--amber);margin-bottom:6px">⚠️ Clinical Pearl</p>
-      <p style="font-size:.8rem;color:var(--muted);line-height:1.7">
-        Steroid-induced IOP rise typically occurs 2–6 weeks after initiation. Monitor IOP closely in high-risk patients (glaucoma suspects, high myopes, young children). Soft steroids (loteprednol) carry the lowest IOP risk.
-      </p>
+  <div class="two-col reveal" style="margin-top:18px">
+    <div class="pearl">
+      <div class="pearl-label">⭐ Clinical Pearl — Steroid Response</div>
+      <p>IOP rise (steroid response) occurs in ~5–6% of the general population but in up to <strong style="color:var(--text)">90% of primary open-angle glaucoma patients</strong>. High-risk groups: POAG patients, first-degree relatives of glaucoma patients, high myopes, young children, and patients with connective tissue disorders. Always check IOP at 2 and 6 weeks after starting topical steroids.</p>
+    </div>
+    <div class="pearl">
+      <div class="pearl-label">⭐ Clinical Pearl — Fungal Keratitis</div>
+      <p>Steroids suppress local immunity. Topical steroids are <strong style="color:var(--text)">absolutely contraindicated</strong> in active fungal keratitis, active bacterial keratitis, and primary herpetic epithelial keratitis. In interstitial or disciform herpetic keratitis (stromal, non-epithelial), steroids are used WITH concurrent antiviral cover (topical acyclovir or oral valaciclovir).</p>
     </div>
   </div>
+</div>
+</section>
+
+<!-- ════ QUIZ ════ -->
+<section class="section" id="s8">
+<div class="slide-inner">
+  <div class="sec-label reveal">Self Assessment</div>
+  <h2 class="sec-title reveal">Quick Knowledge Check</h2>
+  <p class="sec-intro reveal">Test your understanding with these exam-style MCQs from Dr Salu Agarwal</p>
+  <div class="quiz-wrap reveal">
+    <div class="quiz-counter" id="quiz-counter"></div>
+    <div class="quiz-q" id="quiz-q"></div>
+    <div class="quiz-opts" id="quiz-opts"></div>
+    <div class="quiz-feedback" id="quiz-fb"></div>
+    <button class="quiz-next" id="quiz-next">Next question →</button>
+  </div>
+</div>
 </section>
 
 <script>
-/* ══ DATA ══════════════════════════════════════════════════════════ */
-const steroids = [
-  {name:"Prednisolone acetate 1%",brand:"Pred Forte",potency:"High",use:"Anterior uveitis, post-op",color:"blue"},
-  {name:"Dexamethasone 0.1%",brand:"Maxidex",potency:"High",use:"Severe inflammation, post-op",color:"blue"},
-  {name:"Fluorometholone 0.1%",brand:"FML",potency:"Medium",use:"Allergic/non-infectious conjunctivitis",color:"teal"},
-  {name:"Loteprednol 0.5%",brand:"Lotemax",potency:"Soft",use:"Post-op, allergic, dry eye",color:"teal"},
-  {name:"Rimexolone 1%",brand:"Vexol",potency:"Soft",use:"Anterior uveitis, post-op",color:"teal"},
-  {name:"Betamethasone 0.1%",brand:"Betnesol",potency:"High",use:"External eye inflammation",color:"blue"},
-  {name:"Hydrocortisone 1%",brand:"HC drops",potency:"Low",use:"Mild inflammation, allergy",color:"blue"},
-  {name:"Triamcinolone acetonide",brand:"Kenalog (periocular/IVT)",potency:"High",use:"Uveitis, DME, CRVO",color:"coral"},
-];
-
-const nsaids = [
-  {name:"Diclofenac 0.1%",brand:"Voltaren Optha",use:"Post-op pain, CME prophylaxis",color:"teal"},
-  {name:"Ketorolac 0.5%",brand:"Acular",use:"Allergic itching, post-op pain",color:"teal"},
-  {name:"Nepafenac 0.1%",brand:"Nevanac",use:"Pre-/post-cataract surgery",color:"teal"},
-  {name:"Bromfenac 0.09%",brand:"Bromday",use:"Post-cataract pain & inflammation",color:"teal"},
-  {name:"Flurbiprofen 0.03%",brand:"Ocufen",use:"Intra-op miosis prevention",color:"teal"},
-  {name:"Indomethacin 0.1%",brand:"Indocid",use:"Post-op CME, uveitis",color:"teal"},
-];
-
-const mastCells = [
-  {name:"Sodium Cromoglicate 2%",brand:"Opticrom",use:"Allergic conjunctivitis (seasonal)",color:"amber"},
-  {name:"Nedocromil 2%",brand:"Alocril",use:"Allergic conjunctivitis",color:"amber"},
-  {name:"Lodoxamide 0.1%",brand:"Alomide",use:"Vernal keratoconjunctivitis",color:"amber"},
-  {name:"Olopatadine 0.1%",brand:"Patanol",use:"Dual: antihistamine + mast cell stabilizer",color:"amber"},
-  {name:"Ketotifen 0.025%",brand:"Zaditor",use:"Dual: antihistamine + mast cell stabilizer",color:"amber"},
-  {name:"Azelastine 0.05%",brand:"Optivar",use:"Allergic conjunctivitis",color:"amber"},
+/* ══ DATA ═══════════════════════════════════════════════════════ */
+const classCards = [
+  {icon:"💊",name:"Corticosteroids",desc:"Act on glucocorticoid receptors; inhibit phospholipase A₂ via lipocortin induction. Block both COX and LOX pathways. Most potent class.",tag:"First-line uveitis",col:"blue"},
+  {icon:"🧪",name:"Topical NSAIDs",desc:"Inhibit COX-1 & COX-2 enzymes; prevent prostaglandin synthesis. Do not block leukotrienes. Key role post-surgery.",tag:"Post-op / Allergy itch",col:"teal"},
+  {icon:"🛡️",name:"Mast Cell Stabilizers",desc:"Block Ca²⁺-dependent degranulation. Purely prophylactic. Must be started before allergen exposure.",tag:"Allergic conjunctivitis",col:"amber"},
+  {icon:"🔵",name:"Dual-Action Agents",desc:"Combine H₁-receptor blockade (immediate) + mast cell stabilisation (prevention). Can be started during active symptoms.",tag:"Gold standard allergy",col:"purple"},
+  {icon:"🌿",name:"Calcineurin Inhibitors",desc:"Ciclosporin, Tacrolimus — inhibit T-lymphocyte activation via calcineurin pathway. Steroid-sparing agents for chronic inflammation.",tag:"Steroid-sparing",col:"green"},
+  {icon:"💉",name:"Intravitreal Implants",desc:"Slow-release corticosteroid devices (Ozurdex, Iluvien, Yutiq) for posterior segment disease. Duration 3–36 months.",tag:"Posterior segment",col:"coral"},
 ];
 
 const mechSteps = [
-  {num:1,title:"Steroid enters cell",body:"Lipophilic corticosteroid diffuses through the cell membrane into the cytoplasm.",col:"#60a5fa"},
-  {num:2,title:"Binds glucocorticoid receptor (GR)",body:"Forms a steroid-GR complex that translocates to the nucleus.",col:"#2dd4bf"},
-  {num:3,title:"Inhibits phospholipase A₂",body:"Induces lipocortin (annexin-1) which blocks PLA₂ → no arachidonic acid release.",col:"#c084fc"},
-  {num:4,title:"Blocks COX & LOX pathways",body:"Both prostaglandins and leukotrienes synthesis is suppressed simultaneously.",col:"#fb7185"},
-  {num:5,title:"Reduces vascular permeability",body:"Less histamine release, reduced chemotaxis, decreased leukocyte migration.",col:"#4ade80"},
+  {num:1,title:"Diffusion into cell",body:"Lipophilic steroid passively diffuses through the cell membrane phospholipid bilayer — does not require a receptor at the surface.",col:"#60a5fa"},
+  {num:2,title:"Cytoplasmic glucocorticoid receptor (GR) binding",body:"Steroid binds to the GR, causing conformational change and dissociation of heat shock proteins (Hsp90). The activated complex translocates to the nucleus.",col:"#2dd4bf"},
+  {num:3,title:"Nuclear gene transcription modulation",body:"GR–steroid complex binds Glucocorticoid Response Elements (GREs) on DNA. Induces anti-inflammatory genes (lipocortin/annexin-1) and represses pro-inflammatory gene transcription (NF-κB pathway).",col:"#c084fc"},
+  {num:4,title:"Lipocortin inhibits phospholipase A₂",body:"Annexin-1 (lipocortin) directly inhibits PLA₂, preventing arachidonic acid release from membrane phospholipids — this blocks BOTH the COX and LOX pathways simultaneously.",col:"#fb7185"},
+  {num:5,title:"Reduction of vascular permeability",body:"Decreased prostaglandin and leukotriene levels reduce vasodilation, chemotaxis, and leukocyte margination. Histamine and cytokine release is also suppressed.",col:"#4ade80"},
+  {num:6,title:"Clinical result",body:"Reduced flare, cells, and protein in the anterior chamber. Lower conjunctival/episcleral vessel dilation. Suppressed macular oedema. Decreased corneal oedema in graft rejection.",col:"#fbbf24"},
+];
+
+const indications = [
+  {icon:"👁️",title:"Anterior Uveitis",body:"First-line: prednisolone acetate 1% hourly tapering over weeks"},
+  {icon:"🔴",title:"Corneal Graft Rejection",body:"High-dose topical + systemic pulse IV methylprednisolone 1g/day × 3"},
+  {icon:"🩺",title:"Post-cataract Surgery",body:"Dexamethasone / prednisolone QID × 4–6 weeks tapering"},
+  {icon:"🌸",title:"Vernal Keratoconjunctivitis",body:"Fluorometholone or loteprednol; short-course only; not long-term"},
+  {icon:"🔬",title:"Scleritis",body:"Systemic oral prednisolone 1 mg/kg/day; topical rarely sufficient"},
+  {icon:"💧",title:"Cystoid Macular Oedema",body:"Intravitreal triamcinolone / Ozurdex; combined with NSAID drops"},
 ];
 
 const compRows = [
-  ["Mechanism","Blocks PLA₂ (entire cascade)","Inhibits COX only","Prevents mast cell degranulation"],
-  ["Onset","24–48 h","Hours","Days–weeks (prophylactic)"],
-  ["Potency","⭐⭐⭐","⭐⭐","⭐ (specific)"],
-  ["IOP risk","Yes — significant","Minimal","None"],
-  ["Cataract risk","Yes (long-term)","No","No"],
-  ["Primary indication","Uveitis, severe allergic","Post-op pain, CME","Allergic conjunctivitis"],
-  ["OTC availability","Rx only","Rx (some OTC)","OTC / Rx"],
+  ["Mechanism","Blocks PLA₂ → COX + LOX","Blocks COX only","Prevents mast cell degranulation","H₁ block + mast cell stabilisation"],
+  ["Onset of action","24–72 hours","Hours","Days–weeks (prophylactic)","Minutes (H₁ block); days (MCS)"],
+  ["Potency","⭐⭐⭐ Highest","⭐⭐","⭐ (specific/targeted)","⭐⭐ (dual)"],
+  ["IOP risk","Yes — significant","Minimal / none","None","None"],
+  ["Cataract risk","Yes (long-term)","None","None","None"],
+  ["Blocks leukotrienes","Yes","No","Partially","No"],
+  ["Use in infection","Caution/contraindicated","Caution (corneal healing)","Safe","Safe"],
+  ["Prophylactic use","Limited","Yes (pre-surgery)","Primary use","Yes"],
+  ["Duration","Short to medium","Short peri-op course","Long-term safe","Long-term safe"],
 ];
 
 const seItems = [
-  {icon:"👁️",title:"Steroid-induced glaucoma",col:"#fb7185",list:["IOP rise in 2–6 weeks","Steroid responders ~5–6%","Monitor with tonometry"]},
-  {icon:"🔮",title:"Posterior subcapsular cataract",col:"#c084fc",list:["Long-term steroid use","Irreversible","Use minimum effective dose"]},
-  {icon:"🦠",title:"Secondary infections",col:"#f97316",list:["Fungal keratitis risk","Reactivation of HSV","Use with caution in infections"]},
-  {icon:"😤",title:"NSAID corneal melting",col:"#fb7185",list:["Rare but sight-threatening","Avoid in severe dry eye","Nepafenac — lowest risk"]},
-  {icon:"😮",title:"Mast cell stabilizer stinging",col:"#fbbf24",list:["Transient on instillation","Minimal systemic effects","Safe for long-term use"]},
-  {icon:"🌡️",title:"Systemic absorption",col:"#60a5fa",list:["Nasolacrimal drainage","Punctal occlusion reduces","Children especially at risk"]},
+  {icon:"📈",title:"Steroid-induced glaucoma",col:"#fb7185",list:["IOP rise in 2–6 weeks post-initiation","Steroid responders: ~5% general population, up to 90% in POAG","Mechanism: increased trabecular meshwork resistance via myocilin build-up","Manage: switch to soft steroid (loteprednol); add IOP-lowering agent"]},
+  {icon:"🔮",title:"Posterior subcapsular cataract",col:"#c084fc",list:["Posterior cortex opacification — classic lens finding","Risk increases with dose and duration","Children at higher risk than adults","Switch to soft steroid (loteprednol) for long-term use"]},
+  {icon:"🦠",title:"Secondary infections",col:"#f97316",list:["Fungal keratitis — topical steroids mask and worsen","Bacterial keratitis — stromal infiltrate may enlarge","HSV reactivation — use only with antiviral cover","Acanthamoeba — absolute contraindication to steroids alone"]},
+  {icon:"🌊",title:"NSAID corneal melt",col:"#60a5fa",list:["Sterile keratolysis — rare but sight-threatening","Risk: dry eye, pre-existing epithelial defect","Older formulations (diclofenac) carry higher risk","Nepafenac/bromfenac: improved safety profile"]},
+  {icon:"😮",title:"Systemic absorption — steroids",col:"#fbbf24",list:["Via nasolacrimal → nasopharyngeal mucosa absorption","Adrenal suppression with intensive topical regimens","Cushing syndrome reported in young children","Nasolacrimal occlusion and eyelid closure reduce systemic absorption by ~60%"]},
+  {icon:"🌡️",title:"Mast cell stabilizer effects",col:"#2dd4bf",list:["Transient stinging and burning on instillation","No serious systemic effects","Benzalkonium chloride (preservative) — avoid in contact lens wearers","Sodium cromoglicate: safe even in pregnancy (Category B)"]},
 ];
 
-/* ══ INJECT CARDS ══════════════════════════════════════════════ */
+const quizData = [
+  {q:"Which enzyme is directly inhibited by lipocortin (annexin-1) induced by corticosteroids?",opts:["COX-1","Phospholipase A₂","5-Lipoxygenase","Histidine decarboxylase"],ans:1,exp:"Corticosteroids induce lipocortin (annexin-1), which directly inhibits phospholipase A₂. This blocks arachidonic acid release, thereby shutting down both the COX and LOX pathways simultaneously."},
+  {q:"A 35-year-old patient on prednisolone acetate 1% QID develops IOP of 34 mmHg after 3 weeks. Which steroid is the SAFEST alternative?",opts:["Dexamethasone 0.1%","Betamethasone 0.1%","Loteprednol etabonate 0.5%","Fluorometholone + betamethasone"],ans:2,exp:"Loteprednol etabonate is a 'soft steroid' that undergoes predictable local metabolism in the eye, producing inactive metabolites. It has the lowest risk of IOP elevation among all available topical corticosteroids."},
+  {q:"Sodium cromoglicate 2% eye drops are prescribed. Which counselling point is MOST important?",opts:["Use only when eyes are itchy","Start 2–4 weeks before allergen season","Discontinue if stinging occurs","Only for short-term use up to 2 weeks"],ans:1,exp:"Mast cell stabilizers are purely prophylactic — they prevent degranulation but do not reverse established symptoms. They must be started 2–4 weeks before expected allergen exposure for optimal benefit."},
+  {q:"Nepafenac penetrates the cornea well as a prodrug. Where is it converted to its active form (amfenac)?",opts:["Corneal epithelium","Tear film","Intraocular tissues by esterases","Systemic circulation"],ans:2,exp:"Nepafenac is an inactive prodrug that penetrates the cornea efficiently. Intraocular esterases (present in the iris, ciliary body, retina) convert nepafenac to amfenac, the active COX inhibitor, inside the eye."},
+  {q:"Which route of steroid administration provides the HIGHEST intraocular drug concentration with the LEAST systemic absorption?",opts:["Oral prednisolone","Topical drops","Sub-Tenon injection","IV methylprednisolone"],ans:2,exp:"Sub-Tenon injection delivers the drug adjacent to the sclera, achieving very high posterior segment and anterior segment concentrations, with minimal systemic absorption compared to oral or IV routes."},
+  {q:"In a patient with active herpetic stromal (interstitial/disciform) keratitis, which statement is correct regarding steroids?",opts:["Absolutely contraindicated","Can be used with concurrent antiviral cover","Use systemic steroids only","Soft steroids are safe without antivirals"],ans:1,exp:"In stromal (non-epithelial) herpetic keratitis, topical steroids reduce immune-mediated stromal damage and are used — but ONLY with concurrent antiviral cover (topical acyclovir or oral valaciclovir). Steroids are absolutely contraindicated in active herpetic epithelial keratitis."},
+];
+
+/* ══ INJECT CLASS CARDS ══ */
 function colorVars(c){
-  const m={blue:["rgba(96,165,250,.15)","rgba(96,165,250,.4)","#60a5fa"],
-           teal:["rgba(45,212,191,.15)","rgba(45,212,191,.4)","#2dd4bf"],
-           amber:["rgba(251,191,36,.12)","rgba(251,191,36,.4)","#fbbf24"],
-           coral:["rgba(251,113,133,.15)","rgba(251,113,133,.4)","#fb7185"]};
+  const m={blue:["rgba(96,165,250,.12)","rgba(96,165,250,.4)","#60a5fa"],
+    teal:["rgba(45,212,191,.12)","rgba(45,212,191,.4)","#2dd4bf"],
+    amber:["rgba(251,191,36,.10)","rgba(251,191,36,.4)","#fbbf24"],
+    coral:["rgba(251,113,133,.12)","rgba(251,113,133,.4)","#fb7185"],
+    purple:["rgba(192,132,252,.12)","rgba(192,132,252,.4)","#c084fc"],
+    green:["rgba(74,222,128,.10)","rgba(74,222,128,.4)","#4ade80"]};
   return m[c]||m.blue;
 }
-
-function buildCards(data,containerId,potencyKey,extra){
-  const g=document.getElementById(containerId);
-  data.forEach((d,i)=>{
-    const[bg,bd,tc]=colorVars(d.color);
-    const tag=d.potency?`<span class="tag" style="background:${bg};color:${tc}">${d.potency}</span>`:"";
-    const c=document.createElement("div");
-    c.className="drug-card";
-    c.style.cssText=`border-color:${bd};transition-delay:${i*80}ms`;
-    c.innerHTML=`<div class="icon" style="font-size:1.2rem;color:${tc}">💊</div>
-      <h3>${d.name}</h3>
-      <p style="margin:4px 0 2px;font-size:.7rem;color:${tc};font-weight:600">${d.brand}</p>
-      <p>${d.use}</p>${tag}`;
-    g.appendChild(c);
-  });
-}
-
-buildCards(steroids,"steroid-grid");
-buildCards(nsaids,"nsaid-grid");
-buildCards(mastCells,"mast-grid");
+const cg=document.getElementById("class-grid");
+classCards.forEach((d,i)=>{
+  const[bg,bd,tc]=colorVars(d.col);
+  const el=document.createElement("div");
+  el.className="drug-card";
+  el.style.cssText=`border-color:${bd};transition-delay:${i*80}ms`;
+  el.innerHTML=`<div class="d-icon" style="color:${tc}">${d.icon}</div>
+    <h3>${d.name}</h3><p>${d.desc}</p>
+    <span class="tag" style="background:${bg};color:${tc}">${d.tag}</span>`;
+  cg.appendChild(el);
+});
 
 /* mech steps */
 const ms=document.getElementById("mech-steps");
@@ -354,13 +558,23 @@ mechSteps.forEach(s=>{
   </div>`;
 });
 
+/* indications */
+const ig=document.getElementById("indication-grid");
+indications.forEach(d=>{
+  ig.innerHTML+=`<div class="ind-card">
+    <div class="ind-icon">${d.icon}</div>
+    <h4>${d.title}</h4><p>${d.body}</p>
+  </div>`;
+});
+
 /* comp table */
 const tb=document.getElementById("comp-tbody");
 compRows.forEach(r=>{
-  tb.innerHTML+=`<tr><td style="font-weight:600;font-size:.8rem">${r[0]}</td>
-    <td style="color:#94a3b8">${r[1]}</td>
-    <td style="color:#94a3b8">${r[2]}</td>
-    <td style="color:#94a3b8">${r[3]}</td></tr>`;
+  tb.innerHTML+=`<tr><td style="font-weight:600;font-size:.78rem;color:var(--text)">${r[0]}</td>
+    <td style="color:var(--muted)">${r[1]}</td>
+    <td style="color:var(--muted)">${r[2]}</td>
+    <td style="color:var(--muted)">${r[3]}</td>
+    <td style="color:var(--muted)">${r[4]}</td></tr>`;
 });
 
 /* se grid */
@@ -373,95 +587,113 @@ seItems.forEach(s=>{
   </div>`;
 });
 
-/* ══ THREE.JS BACKGROUND ═══════════════════════════════════════ */
+/* ══ QUIZ ══ */
+let qi=0,answered=false;
+function loadQ(){
+  const d=quizData[qi];
+  document.getElementById("quiz-counter").textContent=`Question ${qi+1} of ${quizData.length}`;
+  document.getElementById("quiz-q").textContent=d.q;
+  const oo=document.getElementById("quiz-opts");
+  oo.innerHTML="";
+  d.opts.forEach((o,i)=>{
+    const b=document.createElement("button");
+    b.className="quiz-opt";b.textContent=o;
+    b.onclick=function(){
+      if(answered)return;answered=true;
+      const fb=document.getElementById("quiz-fb");
+      if(i===d.ans){b.classList.add("correct");fb.style.background="rgba(74,222,128,.1)";fb.style.border="1px solid rgba(74,222,128,.3)";fb.style.color="#4ade80";}
+      else{b.classList.add("wrong");oo.children[d.ans].classList.add("correct");fb.style.background="rgba(251,113,133,.1)";fb.style.border="1px solid rgba(251,113,133,.3)";fb.style.color="#fb7185";}
+      fb.textContent="✦ "+d.exp;fb.style.display="block";
+      const nxt=document.getElementById("quiz-next");
+      nxt.style.display="block";nxt.textContent=qi<quizData.length-1?"Next question →":"Restart quiz";
+    };
+    oo.appendChild(b);
+  });
+  document.getElementById("quiz-fb").style.display="none";
+  document.getElementById("quiz-next").style.display="none";
+  answered=false;
+}
+document.getElementById("quiz-next").onclick=function(){
+  qi=(qi+1)%quizData.length;loadQ();
+};
+loadQ();
+
+/* ══ THREE.JS BACKGROUND ══ */
 const renderer=new THREE.WebGLRenderer({canvas:document.getElementById("canvas-bg"),alpha:true,antialias:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 renderer.setSize(innerWidth,innerHeight);
 const scene=new THREE.Scene();
 const cam=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,1000);
 cam.position.z=5;
-
 const particles=[];
-const geo=new THREE.SphereGeometry(.04,6,6);
-const cols=["#60a5fa","#2dd4bf","#fbbf24","#fb7185","#c084fc","#4ade80"];
-for(let i=0;i<180;i++){
-  const mat=new THREE.MeshBasicMaterial({color:new THREE.Color(cols[i%cols.length]),transparent:true,opacity:.45});
+const geo=new THREE.SphereGeometry(.035,6,6);
+const cols=["#60a5fa","#2dd4bf","#fbbf24","#fb7185","#c084fc","#4ade80","#7dd3fc","#5eead4"];
+for(let i=0;i<200;i++){
+  const mat=new THREE.MeshBasicMaterial({color:new THREE.Color(cols[i%cols.length]),transparent:true,opacity:.4});
   const m=new THREE.Mesh(geo,mat);
-  m.position.set((Math.random()-0.5)*18,(Math.random()-0.5)*10,(Math.random()-0.5)*8);
-  m.userData={vx:(Math.random()-.5)*.006,vy:(Math.random()-.5)*.004};
+  m.position.set((Math.random()-.5)*20,(Math.random()-.5)*12,(Math.random()-.5)*8);
+  m.userData={vx:(Math.random()-.5)*.005,vy:(Math.random()-.5)*.004};
   scene.add(m);particles.push(m);
 }
-
-/* lines connecting nearby */
-const lineMat=new THREE.LineBasicMaterial({color:0x334155,transparent:true,opacity:.25});
+const lineMat=new THREE.LineBasicMaterial({color:0x1e3a5f,transparent:true,opacity:.2});
+let lineTimer=0;
 function buildLines(){
   scene.children.filter(c=>c.isLine).forEach(l=>scene.remove(l));
-  for(let i=0;i<particles.length;i++){
-    for(let j=i+1;j<particles.length;j++){
-      if(particles[i].position.distanceTo(particles[j].position)<2.2){
+  for(let i=0;i<particles.length;i++)
+    for(let j=i+1;j<particles.length;j++)
+      if(particles[i].position.distanceTo(particles[j].position)<2.4){
         const lg=new THREE.BufferGeometry().setFromPoints([particles[i].position,particles[j].position]);
         scene.add(new THREE.Line(lg,lineMat));
       }
-    }
-  }
 }
 buildLines();
-let lineTimer=0;
-
 let scrollY=0;
 window.addEventListener("scroll",()=>{scrollY=window.scrollY});
-
-function animate(){
+(function animate(){
   requestAnimationFrame(animate);
   particles.forEach(p=>{
-    p.position.x+=p.userData.vx;
-    p.position.y+=p.userData.vy;
-    if(Math.abs(p.position.x)>9)p.userData.vx*=-1;
-    if(Math.abs(p.position.y)>5)p.userData.vy*=-1;
+    p.position.x+=p.userData.vx;p.position.y+=p.userData.vy;
+    if(Math.abs(p.position.x)>10)p.userData.vx*=-1;
+    if(Math.abs(p.position.y)>6)p.userData.vy*=-1;
   });
-  lineTimer++;
-  if(lineTimer%90===0)buildLines();
-  cam.position.y=-scrollY*0.0008;
+  lineTimer++;if(lineTimer%100===0)buildLines();
+  cam.position.y=-scrollY*.0006;
   renderer.render(scene,cam);
-}
-animate();
+})();
 window.addEventListener("resize",()=>{
   cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();
   renderer.setSize(innerWidth,innerHeight);
 });
 
-/* ══ SCROLL ANIMATIONS ═════════════════════════════════════════ */
-const sections=["hero","s1","s2","s3","s4","s5","s6","s7"];
+/* ══ SCROLL & NAV ══ */
+const sids=["s0","s1","s2","s3","s4","s5","s6","s7","s8"];
+const navEl=document.getElementById("nav-dots");
+sids.forEach((id,i)=>{
+  const d=document.createElement("div");d.className="dot";d.title=["Title","Inflammation","Classification","Corticosteroids","NSAIDs","Mast Cell","Comparison","Side Effects","Quiz"][i];
+  d.onclick=()=>document.getElementById(id).scrollIntoView({behavior:"smooth"});
+  navEl.appendChild(d);
+});
 const dots=[...document.querySelectorAll(".dot")];
 const bar=document.getElementById("progress-bar");
-
 const io=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting){
-      const i=sections.indexOf(e.target.id);
+      const i=sids.indexOf(e.target.id);
       dots.forEach((d,j)=>d.classList.toggle("active",j===i));
-      e.target.querySelectorAll(".drug-card,.reveal").forEach((el,idx)=>{
-        setTimeout(()=>el.classList.add("visible"),idx*60);
+      e.target.querySelectorAll(".drug-card").forEach((el,idx)=>{
+        setTimeout(()=>el.classList.add("vis"),idx*80);
       });
     }
   });
-},{threshold:.15});
-sections.forEach(id=>{const el=document.getElementById(id);if(el)io.observe(el)});
-
-const revealIo=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add("visible")});
 },{threshold:.1});
-document.querySelectorAll(".reveal").forEach(el=>revealIo.observe(el));
-
+sids.forEach(id=>{const el=document.getElementById(id);if(el)io.observe(el)});
+const rv=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add("vis")});
+},{threshold:.08});
+document.querySelectorAll(".reveal").forEach(el=>rv.observe(el));
 window.addEventListener("scroll",()=>{
   const h=document.body.scrollHeight-innerHeight;
   bar.style.width=(scrollY/h*100)+'%';
-});
-
-dots.forEach((d,i)=>{
-  d.addEventListener("click",()=>{
-    document.getElementById(sections[i]).scrollIntoView({behavior:"smooth"});
-  });
 });
 </script>
 </body>
